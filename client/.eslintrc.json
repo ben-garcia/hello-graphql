@@ -1,0 +1,47 @@
+{
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".tsx", ".ts"]
+      }
+    }
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint"],
+  "rules": {
+    "react/jsx-filename-extension": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-unresolved": 0,
+    "jsx-a11y/control-has-associated-label": 0,
+    "jsx-a11y/label-has-associated-control": 0,
+    "no-unused-vars": 0,
+    "react/prop-types": 0,
+    "react/button-has-type": 0,
+    "import/extensions": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-indent": 0,
+    "react/jsx-curly-newline": 0
+  }
+}
