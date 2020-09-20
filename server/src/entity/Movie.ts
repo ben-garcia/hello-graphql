@@ -20,4 +20,12 @@ export class Movie extends BaseEntity {
 	@Field(() => User)
 	@ManyToOne(_ => User, user => user.movies, { onDelete: 'CASCADE'})
 	user: User;
+
+	@Field(() => String)
+	@Column()
+	createdAt: Date;	
+
+	@Field(() => String)
+	@Column()
+	updatedAt: Date;	
 }
