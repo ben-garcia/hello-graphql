@@ -29,10 +29,14 @@ class UserUpdateInput {
 
 @Resolver()
 export class UserResolver  {
-	@Mutation(() => User)
+	@Mutation(() => Boolean)
 	async register(@Arg('options', () => UserInput) options: UserInput) {
-		const user = await User.create(options).save();
-		return user; 
+		try {
+			await User.create(options).save();
+			return true;
+		} catch (e) {
+			return false;
+		}
 	}
 
 	@Mutation(() => Boolean)
