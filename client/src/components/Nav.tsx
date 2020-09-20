@@ -54,10 +54,14 @@ export default function Nav() {
       ) : (
         <Menu.Menu position="right">
           <Link to="/register">
-            <Button>Register</Button>
+            <Button onClick={() => localStorage.setItem("activeItem", "")}>
+              Register
+            </Button>
           </Link>
           <Link to="/login">
-            <Button>Login</Button>
+            <Button onClick={() => localStorage.setItem("activeItem", "")}>
+              Login
+            </Button>
           </Link>
         </Menu.Menu>
       )}
