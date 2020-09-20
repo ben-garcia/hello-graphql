@@ -18,8 +18,9 @@ function Users() {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Id</Table.HeaderCell>
-            <Table.HeaderCell>firstName</Table.HeaderCell>
-            <Table.HeaderCell>lastName</Table.HeaderCell>
+            <Table.HeaderCell>Email</Table.HeaderCell>
+            <Table.HeaderCell>CreateAt</Table.HeaderCell>
+            <Table.HeaderCell>UpdatedAt</Table.HeaderCell>
             <Table.HeaderCell># of Movies</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -29,7 +30,12 @@ function Users() {
               <Table.Row key={user.id}>
                 <Table.Cell>{user.id}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>{user.password}</Table.Cell>
+                <Table.Cell>
+                  {new Date(Number(user.createdAt)).toLocaleString()}
+                </Table.Cell>
+                <Table.Cell>
+                  {new Date(Number(user.updatedAt)).toLocaleString()}
+                </Table.Cell>
                 <Table.Cell>{user.movies.length}</Table.Cell>
                 <Table.Cell>
                   <Button color="red" title="Delete" icon>

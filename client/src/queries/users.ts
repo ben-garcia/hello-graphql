@@ -6,7 +6,6 @@ export const GET_USERS = gql`
     users {
       id
       email
-      password
       createdAt
       updatedAt
       movies {
