@@ -1,13 +1,17 @@
 import {
-	Resolver,
-	Mutation,
 	Arg,
+	Field,
+	Mutation,
+	InputType,
 	Int,
 	Query,
-	InputType,
-	Field,
+	ObjectType,
+	Resolver,
+	Ctx,
 } from 'type-graphql';
 import { User } from '../entity/User';
+import { MyApolloContext } from '../types';
+import * as argon2 from 'argon2';
 
 @InputType()
 class UserInput {
@@ -27,15 +31,83 @@ class UserUpdateInput {
 	password?: string
 }
 
+@ObjectType()
+class FieldError {
+  @Field()
+  field: string;
+
+  @Field()
+  message: string;
+}
+
+@ObjectType()
+class UserResponse {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+
+  @Field(() => User, { nullable: true })
+  user?: User;
+}
+
 @Resolver()
-export class UserResolver  {
+export class UserResolver {
 	@Mutation(() => Boolean)
-	async register(@Arg('options', () => UserInput) options: UserInput) {
+	async register(
+		@Arg('options', () => UserInput) options: UserInput): Promise<Boolean> {
 		try {
 			await User.create(options).save();
 			return true;
 		} catch (e) {
 			return false;
+		}
+	}
+
+	@Mutation(() => UserResponse)
+	async login(
+		@Arg('options', () => UserInput) options: UserInput,
+		@Ctx() { req }: MyApolloContext
+	): Promise<UserResponse>{
+		try {
+			const user = await User.findOne({ where: { email: options.email }})
+
+			if (!user) {
+				return {
+					errors: [
+						{
+							field: 'email',
+							message: 'no user wth that email'
+						}
+					]
+				}
+			}
+
+			const isPasswordValid = await argon2.verify(user.password, options.password);  
+
+			if (!isPasswordValid) {
+				return {
+					errors: [
+						{
+							field: 'password',
+							message: 'wrong password',
+						}
+					]
+				};
+			}
+
+			req.session.userId = user.id;
+
+			return { user };
+
+		} catch (e) {
+			console.log('error: ', e);
+			return {
+				errors: [
+					{ 
+						field: 'g',
+						message: 'error',
+					}
+				]
+			}	
 		}
 	}
 
@@ -60,5 +132,16 @@ export class UserResolver  {
 						.createQueryBuilder('user')
 						.leftJoinAndSelect('user.movies', 'movie')
 						.getMany();
+	}
+
+	@Query(() => User, { nullable: true })
+	async me(
+		@Ctx() { req }: MyApolloContext
+	): Promise<User | null> {
+		if (!req.session.userId) {
+			return null;
+		}
+		const user = await User.findOne(req.session.userId);
+		return user as User;
 	}
 }

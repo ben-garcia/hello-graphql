@@ -3,6 +3,11 @@ import { createConnection } from "typeorm";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
+import redis from 'redis';
+import session from 'express-session';
+import connectRedis from 'connect-redis';
+ 
+
 import { MovieResolver } from "./resolvers/MovieResolver";
 import { UserResolver } from "./resolvers/UserResolver";
 
@@ -11,11 +16,31 @@ import { UserResolver } from "./resolvers/UserResolver";
 
   await createConnection();
 
+	const RedisStore = connectRedis(session)
+	const redisClient = redis.createClient({ password: 'ben' })
+ 
+	app.use(
+		session({
+			name: 'sid',
+			cookie: {
+				maxAge: 1000 * 60 * 60 * 24 * 365,
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false,
+			},
+			store: new RedisStore({ client: redisClient }),
+			secret: 'keyboard cat',
+			resave: false,
+			saveUninitialized: false
+		})
+	)
+
+
   const apolloServer: ApolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [MovieResolver, UserResolver]
     }),
-    context: ({ req, res }) => ({ req, res })
+		context: ({ req }) => ({ req })
   });
 
   apolloServer.applyMiddleware({ app, cors: true });
