@@ -1,11 +1,10 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
 import { Button, Container, Header, Icon, Table } from "semantic-ui-react";
 
-import { GET_USERS } from "../queries";
+import { useUsersQuery } from "../generated/graphql";
 
 function Users() {
-  const { loading, error, data } = useQuery(GET_USERS);
+  const { loading, error, data } = useUsersQuery();
 
   return (
     <Container>
@@ -51,4 +50,3 @@ function Users() {
 }
 
 export default Users;
-

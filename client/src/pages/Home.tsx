@@ -1,11 +1,10 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
 import { Button, Container, Header, Icon, Table } from "semantic-ui-react";
 
-import { GET_MOVIES } from "../queries";
+import { useMoviesQuery } from "../generated/graphql";
 
 function Home() {
-  const { loading, error, data } = useQuery(GET_MOVIES);
+  const { loading, error, data } = useMoviesQuery();
 
   return (
     <Container>
@@ -45,4 +44,3 @@ function Home() {
 }
 
 export default Home;
-

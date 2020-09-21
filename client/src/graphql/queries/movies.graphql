@@ -1,0 +1,12 @@
+query Movies {
+  movies {
+    id
+    title
+    minutes
+    createdAt
+    updatedAt
+    user {
+      email
+    }
+  }
+}

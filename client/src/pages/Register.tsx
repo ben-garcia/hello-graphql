@@ -1,9 +1,8 @@
 import React from "react";
 import { Button, Grid, Form, Header } from "semantic-ui-react";
 import { Formik } from "formik";
-import { useMutation } from "@apollo/client";
 
-import { REGISTER } from "../mutations";
+import { useRegisterMutation } from "../generated/graphql";
 
 interface Errors {
   email?: string;
@@ -11,7 +10,7 @@ interface Errors {
 }
 
 function Register() {
-  const [register] = useMutation(REGISTER);
+  const [register] = useRegisterMutation();
 
   return (
     <>
@@ -42,10 +41,19 @@ function Register() {
               return errors;
             }}
             onSubmit={(values, { setSubmitting }) => {
-              register({
-                variables: { email: values.email, password: values.password },
-              });
-              setSubmitting(false);
+              setTimeout(async () => {
+                try {
+                  const response = await register({
+                    variables: {
+                      email: values.email,
+                      password: values.password,
+                    },
+                  });
+                  setSubmitting(false);
+                } catch (e) {
+                  console.log(e);
+                }
+              }, 1000);
             }}
           >
             {({
