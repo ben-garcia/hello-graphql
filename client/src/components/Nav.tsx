@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Menu } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { UserContext } from "../contexts/UserContext";
 
 export default function Nav() {
-  const [activeItem, setActiveItem] = useState<string>("home");
-  const { isLoggedIn, setIsLoggedIn }: any = useContext(UserContext);
+  const history = useHistory();
+  const [activeItem, setActiveItem] = useState<string>("");
+  const { isLoggedIn, setIsLoggedIn, setEmail, setCreatedAt }: any = useContext(
+    UserContext
+  );
 
   useEffect(() => {
     const item = localStorage.getItem("activeItem");
@@ -18,11 +21,18 @@ export default function Nav() {
 
   useEffect(() => {
     const user = localStorage.getItem("user");
+    const item = localStorage.getItem("activeItem");
 
     if (user && !isLoggedIn) {
       setIsLoggedIn(true);
+      const parsedUser = JSON.parse(user);
+      setEmail(parsedUser.email);
+      setCreatedAt(parsedUser.createdAt);
+      if (!item) localStorage.setItem("activeItem", "profile");
+      else history.replace(`/${item}`);
     }
-  }, []);
+    // eslint-disable-next-line
+  }, [activeItem]);
 
   return (
     <Menu pointing secondary>
