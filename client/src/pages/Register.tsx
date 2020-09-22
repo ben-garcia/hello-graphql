@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Grid, Form, Header } from "semantic-ui-react";
 import { Formik } from "formik";
+import { useHistory } from "react-router-dom";
 
 import { useRegisterMutation } from "../generated/graphql";
 
@@ -11,6 +12,7 @@ interface Errors {
 
 function Register() {
   const [register] = useRegisterMutation();
+  const history = useHistory();
 
   return (
     <>
@@ -50,6 +52,10 @@ function Register() {
                     },
                   });
                   setSubmitting(false);
+
+                  if (response?.data?.register) {
+                    history.push("/login");
+                  }
                 } catch (e) {
                   console.log(e);
                 }
