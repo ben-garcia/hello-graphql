@@ -1,4 +1,4 @@
-import { ManyToOne, Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { CreateDateColumn, UpdateDateColumn, ManyToOne, Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 import { Field, Int, ObjectType } from "type-graphql";
 import { User } from '../entity/User';
 
@@ -22,10 +22,10 @@ export class Movie extends BaseEntity {
 	user: User;
 
 	@Field(() => String)
-	@Column()
+	@CreateDateColumn()
 	createdAt: Date;	
 
 	@Field(() => String)
-	@Column()
+	@UpdateDateColumn()
 	updatedAt: Date;	
 }

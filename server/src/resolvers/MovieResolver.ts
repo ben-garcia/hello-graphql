@@ -1,11 +1,12 @@
 import {
-  Resolver,
-  Mutation,
   Arg,
-  Int,
-  Query,
+  Field,
   InputType,
-  Field
+  Int,
+  Mutation,
+  Query,
+	ObjectType,
+  Resolver,
 } from "type-graphql";
 import { Movie } from "../entity/Movie";
 
@@ -30,12 +31,41 @@ class MovieUpdateInput {
   minutes?: number;
 }
 
+@ObjectType()
+class MovieFieldError {
+	@Field()
+	field: string;
+	
+	@Field()
+	message: string;
+}
+
+@ObjectType()
+class MovieResponse {
+	@Field(() => [MovieFieldError], { nullable: true } )
+	errors?: MovieFieldError[];
+
+	@Field(() => Movie, { nullable: true })
+	movie?: Movie;
+}
+
 @Resolver()
 export class MovieResolver {
-  @Mutation(() => Movie)
-  async createMovie(@Arg("options", () => MovieInput) options: MovieInput) {
-    const movie = await Movie.create(options as any).save();
-    return movie;
+  @Mutation(() => MovieResponse)
+  async createMovie(@Arg("options", () => MovieInput) options: MovieInput): Promise<MovieResponse> {
+		try {
+			const movie = await Movie.create(options as any).save();
+			return { movie } ;
+		} catch (e) {
+			return {
+				errors: [
+					{
+						field: '',
+						message: ',error',
+					}
+				]
+			}
+		}
   }
 
   @Mutation(() => Boolean)

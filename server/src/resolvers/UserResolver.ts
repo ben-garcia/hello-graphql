@@ -32,7 +32,7 @@ class UserUpdateInput {
 }
 
 @ObjectType()
-class FieldError {
+class UserFieldError {
   @Field()
   field: string;
 
@@ -42,8 +42,8 @@ class FieldError {
 
 @ObjectType()
 class UserResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
+  @Field(() => [UserFieldError], { nullable: true })
+  errors?: UserFieldError[];
 
   @Field(() => User, { nullable: true })
   user?: User;
