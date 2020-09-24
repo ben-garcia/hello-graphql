@@ -23,7 +23,9 @@ const toErrorMap = (errors: FieldError[]) => {
 function Register() {
   const [login] = useLoginMutation();
   const history = useHistory();
-  const { setIsLoggedIn }: any = useContext(UserContext);
+  const { setIsLoggedIn, setId, setEmail, setCreatedAt } = useContext(
+    UserContext
+  );
 
   return (
     <>
@@ -70,7 +72,10 @@ function Register() {
                   if (response.data?.login.user) {
                     const user = JSON.stringify(response.data.login.user);
                     localStorage.setItem("user", user);
-                    setIsLoggedIn(true);
+                    setIsLoggedIn!(true);
+                    setEmail!(response.data.login.user.email);
+                    setId!(response.data.login.user.id);
+                    setCreatedAt!(response.data.login.user.createdAt);
                     history.push("/profile");
                   }
 

@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Button, Container, Header, Icon, Table } from "semantic-ui-react";
 
+import CreateMovieForm from "../components/CreateMovieForm";
+
 import { useMoviesQuery } from "../generated/graphql";
+import { MovieContext } from "../contexts/MovieContext";
 
 function Home() {
+  const { list, setList } = useContext(MovieContext);
   const { loading, error, data } = useMoviesQuery();
+  if (data) {
+    setList!(data.movies as any);
+  }
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
   return (
     <Container>
@@ -23,8 +31,8 @@ function Home() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {data &&
-            data.movies.map((movie: any) => (
+          {list.length ? (
+            list.map((movie: any) => (
               <Table.Row key={movie.id}>
                 <Table.Cell>{movie.id}</Table.Cell>
                 <Table.Cell>{movie.title}</Table.Cell>
@@ -36,9 +44,16 @@ function Home() {
                   </Button>
                 </Table.Cell>
               </Table.Row>
-            ))}
+            ))
+          ) : (
+            <Header as="h2">There are no movies yet</Header>
+          )}
         </Table.Body>
       </Table>
+      <CreateMovieForm
+        closeModal={setModalIsOpen}
+        trigger={<Button primary>Add a movie</Button>}
+      />
     </Container>
   );
 }

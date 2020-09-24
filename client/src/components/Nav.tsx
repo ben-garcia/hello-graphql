@@ -7,9 +7,14 @@ import { UserContext } from "../contexts/UserContext";
 export default function Nav() {
   const history = useHistory();
   const [activeItem, setActiveItem] = useState<string>("");
-  const { isLoggedIn, setIsLoggedIn, setEmail, setCreatedAt }: any = useContext(
-    UserContext
-  );
+  const {
+    setId,
+    isLoggedIn,
+    setIsLoggedIn,
+    setEmail,
+    setCreatedAt,
+    setUpdatedAt,
+  } = useContext(UserContext);
 
   useEffect(() => {
     const item = localStorage.getItem("activeItem");
@@ -24,10 +29,12 @@ export default function Nav() {
     const item = localStorage.getItem("activeItem");
 
     if (user && !isLoggedIn) {
-      setIsLoggedIn(true);
+      setIsLoggedIn!(true);
       const parsedUser = JSON.parse(user);
-      setEmail(parsedUser.email);
-      setCreatedAt(parsedUser.createdAt);
+      setEmail!(parsedUser.email);
+      setCreatedAt!(parsedUser.createdAt);
+      setUpdatedAt!(parsedUser.createdAt);
+      setId!(parsedUser.id);
       if (!item) localStorage.setItem("activeItem", "profile");
       else history.replace(`/${item}`);
     }
