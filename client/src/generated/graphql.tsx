@@ -39,7 +39,7 @@ export type User = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createMovie: Movie;
+  createMovie: MovieResponse;
   updateMovie: Scalars['Boolean'];
   deleteMovie: Scalars['Boolean'];
   register: Scalars['Boolean'];
@@ -91,6 +91,18 @@ export type MovieInput = {
   user: Scalars['Int'];
 };
 
+export type MovieResponse = {
+  __typename?: 'MovieResponse';
+  errors?: Maybe<Array<MovieFieldError>>;
+  movie?: Maybe<Movie>;
+};
+
+export type MovieFieldError = {
+  __typename?: 'MovieFieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type MovieUpdateInput = {
   title?: Maybe<Scalars['String']>;
   minutes?: Maybe<Scalars['Int']>;
@@ -117,6 +129,27 @@ export type UserUpdateInput = {
   email?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
 };
+
+export type CreateMovieMutationVariables = Exact<{
+  title: Scalars['String'];
+  minutes: Scalars['Int'];
+  user: Scalars['Int'];
+}>;
+
+
+export type CreateMovieMutation = (
+  { __typename?: 'Mutation' }
+  & { createMovie: (
+    { __typename?: 'MovieResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'MovieFieldError' }
+      & Pick<MovieFieldError, 'field' | 'message'>
+    )>>, movie?: Maybe<(
+      { __typename?: 'Movie' }
+      & Pick<Movie, 'id' | 'title' | 'minutes' | 'createdAt' | 'updatedAt'>
+    )> }
+  ) }
+);
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -180,6 +213,50 @@ export type UsersQuery = (
 );
 
 
+export const CreateMovieDocument = gql`
+    mutation CreateMovie($title: String!, $minutes: Int!, $user: Int!) {
+  createMovie(options: {title: $title, minutes: $minutes, user: $user}) {
+    errors {
+      field
+      message
+    }
+    movie {
+      id
+      title
+      minutes
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type CreateMovieMutationFn = Apollo.MutationFunction<CreateMovieMutation, CreateMovieMutationVariables>;
+
+/**
+ * __useCreateMovieMutation__
+ *
+ * To run a mutation, you first call `useCreateMovieMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMovieMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMovieMutation, { data, loading, error }] = useCreateMovieMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      minutes: // value for 'minutes'
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useCreateMovieMutation(baseOptions?: Apollo.MutationHookOptions<CreateMovieMutation, CreateMovieMutationVariables>) {
+        return Apollo.useMutation<CreateMovieMutation, CreateMovieMutationVariables>(CreateMovieDocument, baseOptions);
+      }
+export type CreateMovieMutationHookResult = ReturnType<typeof useCreateMovieMutation>;
+export type CreateMovieMutationResult = Apollo.MutationResult<CreateMovieMutation>;
+export type CreateMovieMutationOptions = Apollo.BaseMutationOptions<CreateMovieMutation, CreateMovieMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(options: {email: $email, password: $password}) {

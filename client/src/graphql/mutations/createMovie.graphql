@@ -1,0 +1,15 @@
+mutation CreateMovie($title: String! $minutes: Int! $user: Int!) {
+  createMovie(options: { title: $title, minutes: $minutes, user: $user }) {
+    errors {
+      field
+      message
+    }
+    movie {
+      id
+      title
+      minutes
+      createdAt
+      updatedAt
+    }
+  }
+}
