@@ -3,19 +3,22 @@ import { Container } from "semantic-ui-react";
 
 import StateContext, { initialState } from "./contexts/StateContext";
 import DispatchContext from "./contexts/DispatchContext";
+import rootReducer, { AppState, AppActions } from "./reducers";
 import Routes from "./router";
-import rootReducer from "./reducers";
 
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
 function App() {
-  const [state, dispatch] = useReducer(rootReducer, initialState as any);
+  const [state, dispatch] = useReducer<React.Reducer<AppState, AppActions>>(
+    rootReducer,
+    initialState
+  );
 
   return (
     <Container>
-      <DispatchContext.Provider value={dispatch as any}>
-        <StateContext.Provider value={state as any}>
+      <DispatchContext.Provider value={dispatch}>
+        <StateContext.Provider value={state}>
           <Routes />
         </StateContext.Provider>
       </DispatchContext.Provider>

@@ -26,7 +26,7 @@ const toErrorMap = (errors: FieldError[]) => {
 
 function CreateMovieForm({ trigger }: Props) {
   const {
-    user: { id: userId },
+    user: { id: userId, email },
   } = useContext(StateContext);
   const dispatch = useContext<any>(DispatchContext);
   const [createMovie] = useCreateMovieMutation();
@@ -64,7 +64,7 @@ function CreateMovieForm({ trigger }: Props) {
                     variables: {
                       title: values.title,
                       minutes: Number(values.minutes),
-                      user: userId,
+                      user: userId as number,
                     },
                   });
                   setSubmitting(false);
@@ -80,7 +80,7 @@ function CreateMovieForm({ trigger }: Props) {
                       type: "ADD_MOVIE",
                       payload: {
                         ...response.data.createMovie.movie,
-                        user: { id: userId },
+                        user: { email },
                       },
                     });
                     setOpen(false);

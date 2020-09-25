@@ -2,3 +2,9 @@ body {
   width: 100vw;
   height: 100vh;
 }
+
+.scroll-wrapper {
+  margin-top: 10px;
+  height: 520px;
+  overflow: hidden scroll;
+}

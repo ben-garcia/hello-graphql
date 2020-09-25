@@ -1,19 +1,19 @@
-import userReducer, { UserState, UserActionsTypes } from "./userReducer";
-import movieReducer, { MovieState, MovieActionsTypes } from "./movieReducer";
+import userReducer, { UserState, UserActionTypes } from "./userReducer";
+import movieReducer, { MovieState, MovieActionTypes } from "./movieReducer";
 
-interface AppState {
+export interface AppState {
   user: UserState;
   movies: MovieState;
 }
 
-type AppActions = UserActionsTypes | MovieActionsTypes;
+export type AppActions = UserActionTypes | MovieActionTypes;
 
 export default function rootReducer(
-  state: AppState,
+  { user, movies }: AppState,
   action: AppActions
 ): AppState {
   return {
-    user: userReducer(state.user, action as any),
-    movies: movieReducer(state.movies, action as any),
+    user: userReducer(user, action),
+    movies: movieReducer(movies, action),
   };
 }

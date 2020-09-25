@@ -1,6 +1,8 @@
 import { createContext } from "react";
 
-const DispatchContext = createContext(0);
+import { AppActions } from "../reducers";
+
+const DispatchContext = createContext<React.Dispatch<AppActions>>(() => {});
 
 export default DispatchContext;
 

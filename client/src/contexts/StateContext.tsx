@@ -1,27 +1,8 @@
 import { createContext } from "react";
 
-interface User {
-  id: number;
-  isLoggedIn: boolean;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { AppState } from "../reducers";
 
-interface Movie {
-  id: number;
-  title: string;
-  minutes: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface State {
-  user: User;
-  movies: Movie[];
-}
-
-export const initialState: State = {
+export const initialState: AppState = {
   user: {
     id: 0,
     isLoggedIn: false,
@@ -32,6 +13,6 @@ export const initialState: State = {
   movies: [],
 };
 
-const StateContext = createContext<State>(initialState);
+const StateContext = createContext<AppState>(initialState);
 
 export default StateContext;
