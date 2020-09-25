@@ -15,7 +15,8 @@ function Home() {
     if (data) {
       dispatch({ type: "GET_MOVIES", payload: data.movies });
     }
-  }, []);
+    // eslint-disable-next-line
+  }, [data]);
 
   return (
     <Container>
