@@ -4,7 +4,7 @@ import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
 import { useLoginMutation, FieldError } from "../generated/graphql";
-import { UserContext } from "../contexts/UserContext";
+import DispatchContext from "../contexts/DispatchContext";
 
 interface Errors {
   email?: string;
@@ -20,12 +20,10 @@ const toErrorMap = (errors: FieldError[]) => {
   return errorMap;
 };
 
-function Register() {
+function Login() {
   const [login] = useLoginMutation();
   const history = useHistory();
-  const { setIsLoggedIn, setId, setEmail, setCreatedAt } = useContext(
-    UserContext
-  );
+  const dispatch = useContext<any>(DispatchContext);
 
   return (
     <>
@@ -72,10 +70,10 @@ function Register() {
                   if (response.data?.login.user) {
                     const user = JSON.stringify(response.data.login.user);
                     localStorage.setItem("user", user);
-                    setIsLoggedIn!(true);
-                    setEmail!(response.data.login.user.email);
-                    setId!(response.data.login.user.id);
-                    setCreatedAt!(response.data.login.user.createdAt);
+                    dispatch({
+                      type: "LOGIN",
+                      payload: response.data.login.user,
+                    });
                     history.push("/profile");
                   }
 
@@ -127,4 +125,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Login;

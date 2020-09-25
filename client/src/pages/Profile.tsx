@@ -2,10 +2,12 @@ import React, { useContext } from "react";
 import { Card, Image, Grid, Header } from "semantic-ui-react";
 import avatar from "../avatar.png";
 
-import { UserContext } from "../contexts/UserContext";
+import StateContext from "../contexts/StateContext";
 
 function Register() {
-  const { email, createdAt } = useContext(UserContext);
+  const {
+    user: { email, createdAt },
+  } = useContext(StateContext);
 
   return (
     <>

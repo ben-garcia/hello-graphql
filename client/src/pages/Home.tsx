@@ -1,18 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Container, Header, Icon, Table } from "semantic-ui-react";
 
 import CreateMovieForm from "../components/CreateMovieForm";
 
 import { useMoviesQuery } from "../generated/graphql";
-import { MovieContext } from "../contexts/MovieContext";
+import StateContext from "../contexts/StateContext";
+import DispatchContext from "../contexts/DispatchContext";
 
 function Home() {
-  const { list, setList } = useContext(MovieContext);
+  const { movies } = useContext(StateContext);
+  const dispatch = useContext<any>(DispatchContext);
   const { loading, error, data } = useMoviesQuery();
-  if (data) {
-    setList!(data.movies as any);
-  }
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  useEffect(() => {
+    if (data) {
+      dispatch({ type: "GET_MOVIES", payload: data.movies });
+    }
+  }, []);
 
   return (
     <Container>
@@ -21,6 +24,7 @@ function Home() {
       <Header as="h1" textAlign="center">
         Movies
       </Header>
+      <CreateMovieForm trigger={<Button primary>Add a movie</Button>} />
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -31,8 +35,8 @@ function Home() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {list.length ? (
-            list.map((movie: any) => (
+          {movies.length ? (
+            movies.map((movie: any) => (
               <Table.Row key={movie.id}>
                 <Table.Cell>{movie.id}</Table.Cell>
                 <Table.Cell>{movie.title}</Table.Cell>
@@ -50,10 +54,6 @@ function Home() {
           )}
         </Table.Body>
       </Table>
-      <CreateMovieForm
-        closeModal={setModalIsOpen}
-        trigger={<Button primary>Add a movie</Button>}
-      />
     </Container>
   );
 }

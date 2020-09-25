@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { Container } from "semantic-ui-react";
 
-import UserProvider from "./contexts/UserContext";
-import MovieProvider from "./contexts/MovieContext";
+import StateContext, { initialState } from "./contexts/StateContext";
+import DispatchContext from "./contexts/DispatchContext";
 import Routes from "./router";
+import rootReducer from "./reducers";
 
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
 function App() {
+  const [state, dispatch] = useReducer(rootReducer, initialState as any);
+
   return (
     <Container>
-      <UserProvider>
-        <MovieProvider>
+      <DispatchContext.Provider value={dispatch as any}>
+        <StateContext.Provider value={state as any}>
           <Routes />
-        </MovieProvider>
-      </UserProvider>
+        </StateContext.Provider>
+      </DispatchContext.Provider>
     </Container>
   );
 }

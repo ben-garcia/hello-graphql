@@ -2,19 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import { Button, Menu } from "semantic-ui-react";
 import { Link, useHistory } from "react-router-dom";
 
-import { UserContext } from "../contexts/UserContext";
+import StateContext from "../contexts/StateContext";
+import DispatchContext from "../contexts/DispatchContext";
 
 export default function Nav() {
   const history = useHistory();
   const [activeItem, setActiveItem] = useState<string>("");
   const {
-    setId,
-    isLoggedIn,
-    setIsLoggedIn,
-    setEmail,
-    setCreatedAt,
-    setUpdatedAt,
-  } = useContext(UserContext);
+    user: { isLoggedIn },
+  } = useContext(StateContext);
+  const dispatch = useContext<any>(DispatchContext);
 
   useEffect(() => {
     const item = localStorage.getItem("activeItem");
@@ -29,12 +26,8 @@ export default function Nav() {
     const item = localStorage.getItem("activeItem");
 
     if (user && !isLoggedIn) {
-      setIsLoggedIn!(true);
       const parsedUser = JSON.parse(user);
-      setEmail!(parsedUser.email);
-      setCreatedAt!(parsedUser.createdAt);
-      setUpdatedAt!(parsedUser.createdAt);
-      setId!(parsedUser.id);
+      dispatch({ type: "LOGIN", payload: parsedUser });
       if (!item) localStorage.setItem("activeItem", "profile");
       else history.replace(`/${item}`);
     }
