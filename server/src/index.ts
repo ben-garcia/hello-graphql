@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
+import cors from 'cors';
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import redis from 'redis';
@@ -18,12 +19,18 @@ import { UserResolver } from "./resolvers/UserResolver";
 
 	const RedisStore = connectRedis(session)
 	const redisClient = redis.createClient({ password: 'ben' })
+
+	app.use(cors({
+		credentials: true,		
+		origin: 'http://localhost:3000'
+	}));
  
 	app.use(
 		session({
 			name: 'sid',
 			cookie: {
 				maxAge: 1000 * 60 * 60 * 24 * 365,
+				path: '/',
         httpOnly: true,
         sameSite: "lax",
         secure: false,
@@ -43,9 +50,9 @@ import { UserResolver } from "./resolvers/UserResolver";
 		context: ({ req }) => ({ req })
   });
 
-  apolloServer.applyMiddleware({ app, cors: true });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4000, () => {
-    console.log("express server started");
+    console.log("server started on port 4000");
   });
 })();

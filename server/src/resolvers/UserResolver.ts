@@ -1,5 +1,6 @@
 import {
 	Arg,
+	Ctx,
 	Field,
 	Mutation,
 	InputType,
@@ -7,11 +8,12 @@ import {
 	Query,
 	ObjectType,
 	Resolver,
-	Ctx,
+	UseMiddleware,
 } from 'type-graphql';
 import { User } from '../entity/User';
 import { MyApolloContext } from '../types';
 import * as argon2 from 'argon2';
+import isAuthenticated from '../middleware/isAuthenticated';
 
 @InputType()
 class UserInput {
@@ -127,6 +129,7 @@ export class UserResolver {
 	}
 
 	@Query(() => [User])
+	@UseMiddleware(isAuthenticated)
 	users() {
 		return User
 						.createQueryBuilder('user')
@@ -135,6 +138,7 @@ export class UserResolver {
 	}
 
 	@Query(() => User, { nullable: true })
+	@UseMiddleware(isAuthenticated)
 	async me(
 		@Ctx() { req }: MyApolloContext
 	): Promise<User | null> {
