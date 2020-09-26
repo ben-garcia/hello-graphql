@@ -3,11 +3,14 @@ import { Card, Image, Grid, Header } from "semantic-ui-react";
 import avatar from "../avatar.png";
 
 import StateContext from "../contexts/StateContext";
+import Table from "../components/Table";
+import { useMeQuery } from "../generated/graphql";
 
-function Register() {
+function Profile() {
   const {
     user: { email, createdAt },
   } = useContext(StateContext);
+  const { data } = useMeQuery();
 
   return (
     <>
@@ -30,9 +33,20 @@ function Register() {
             </Card.Content>
           </Card>
         </Grid.Column>
+        <Grid.Column width={8}>
+          <div className="scroll-wrapper">
+            {data?.me?.movies && (
+              <Table
+                labels={["id", "title", "minutes", "createdAt"]}
+                sources={data?.me?.movies as any}
+                includeUsername={false}
+              />
+            )}
+          </div>
+        </Grid.Column>
       </Grid>
     </>
   );
 }
 
-export default Register;
+export default Profile;
