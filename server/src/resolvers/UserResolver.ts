@@ -145,7 +145,7 @@ export class UserResolver {
 		if (!req.session.userId) {
 			return null;
 		}
-		const user = await User.findOne(req.session.userId);
+		const user = await User.findOne({ where: { id: req.session.userId }, relations: ['movies'] });
 		return user as User;
 	}
 }
