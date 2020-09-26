@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Grid, Modal, Form } from "semantic-ui-react";
 import { Formik } from "formik";
 
-import { useCreateMovieMutation, FieldError } from "../generated/graphql";
+import { useCreateMovieMutation, MovieFieldError } from "../generated/graphql";
 import StateContext from "../contexts/StateContext";
 import DispatchContext from "../contexts/DispatchContext";
 
@@ -15,7 +15,7 @@ interface Props {
   trigger: React.ReactNode;
 }
 
-const toErrorMap = (errors: FieldError[]) => {
+const toErrorMap = (errors: MovieFieldError[]) => {
   const errorMap: Record<string, string> = {};
   errors.forEach(({ field, message }) => {
     errorMap[field] = message;
@@ -26,7 +26,7 @@ const toErrorMap = (errors: FieldError[]) => {
 
 function CreateMovieForm({ trigger }: Props) {
   const {
-    user: { id: userId, email },
+    user: { email },
   } = useContext(StateContext);
   const dispatch = useContext<any>(DispatchContext);
   const [createMovie] = useCreateMovieMutation();
@@ -64,7 +64,6 @@ function CreateMovieForm({ trigger }: Props) {
                     variables: {
                       title: values.title,
                       minutes: Number(values.minutes),
-                      user: userId as number,
                     },
                   });
                   setSubmitting(false);

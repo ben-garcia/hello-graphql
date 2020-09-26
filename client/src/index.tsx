@@ -13,6 +13,7 @@ import * as serviceWorker from "./serviceWorker";
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
+  credentials: "include",
 });
 
 ReactDOM.render(

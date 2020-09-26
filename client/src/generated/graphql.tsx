@@ -88,7 +88,6 @@ export type MutationDeleteUserArgs = {
 export type MovieInput = {
   title: Scalars['String'];
   minutes: Scalars['Int'];
-  user: Scalars['Int'];
 };
 
 export type MovieResponse = {
@@ -115,12 +114,12 @@ export type UserInput = {
 
 export type UserResponse = {
   __typename?: 'UserResponse';
-  errors?: Maybe<Array<FieldError>>;
+  errors?: Maybe<Array<UserFieldError>>;
   user?: Maybe<User>;
 };
 
-export type FieldError = {
-  __typename?: 'FieldError';
+export type UserFieldError = {
+  __typename?: 'UserFieldError';
   field: Scalars['String'];
   message: Scalars['String'];
 };
@@ -133,7 +132,6 @@ export type UserUpdateInput = {
 export type CreateMovieMutationVariables = Exact<{
   title: Scalars['String'];
   minutes: Scalars['Int'];
-  user: Scalars['Int'];
 }>;
 
 
@@ -162,8 +160,8 @@ export type LoginMutation = (
   & { login: (
     { __typename?: 'UserResponse' }
     & { errors?: Maybe<Array<(
-      { __typename?: 'FieldError' }
-      & Pick<FieldError, 'field' | 'message'>
+      { __typename?: 'UserFieldError' }
+      & Pick<UserFieldError, 'field' | 'message'>
     )>>, user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'email' | 'createdAt' | 'updatedAt'>
@@ -214,8 +212,8 @@ export type UsersQuery = (
 
 
 export const CreateMovieDocument = gql`
-    mutation CreateMovie($title: String!, $minutes: Int!, $user: Int!) {
-  createMovie(options: {title: $title, minutes: $minutes, user: $user}) {
+    mutation CreateMovie($title: String!, $minutes: Int!) {
+  createMovie(options: {title: $title, minutes: $minutes}) {
     errors {
       field
       message
@@ -247,7 +245,6 @@ export type CreateMovieMutationFn = Apollo.MutationFunction<CreateMovieMutation,
  *   variables: {
  *      title: // value for 'title'
  *      minutes: // value for 'minutes'
- *      user: // value for 'user'
  *   },
  * });
  */

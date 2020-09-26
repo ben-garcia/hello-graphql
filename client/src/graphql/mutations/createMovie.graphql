@@ -1,5 +1,5 @@
-mutation CreateMovie($title: String! $minutes: Int! $user: Int!) {
-  createMovie(options: { title: $title, minutes: $minutes, user: $user }) {
+mutation CreateMovie($title: String! $minutes: Int!) {
+  createMovie(options: { title: $title, minutes: $minutes }) {
     errors {
       field
       message

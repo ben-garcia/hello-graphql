@@ -3,7 +3,7 @@ import { Button, Grid, Form, Header } from "semantic-ui-react";
 import { Formik } from "formik";
 import { useHistory } from "react-router-dom";
 
-import { useLoginMutation, FieldError } from "../generated/graphql";
+import { useLoginMutation, UserFieldError } from "../generated/graphql";
 import DispatchContext from "../contexts/DispatchContext";
 
 interface Errors {
@@ -11,7 +11,7 @@ interface Errors {
   password?: string;
 }
 
-const toErrorMap = (errors: FieldError[]) => {
+const toErrorMap = (errors: UserFieldError[]) => {
   const errorMap: Record<string, string> = {};
   errors.forEach(({ field, message }) => {
     errorMap[field] = message;
