@@ -1,5 +1,6 @@
 import {
   Arg,
+	Ctx,
   Field,
   InputType,
   Int,
@@ -7,8 +8,12 @@ import {
   Query,
 	ObjectType,
   Resolver,
+	UseMiddleware
 } from "type-graphql";
+
 import { Movie } from "../entity/Movie";
+import isAuthenticated from "../middleware/isAuthenticated";
+import {  MyApolloContext } from '../types';
 
 @InputType()
 class MovieInput {
@@ -17,9 +22,6 @@ class MovieInput {
 
   @Field(() => Int)
   minutes: number;
-
-	@Field(() => Int)
-	user: number;
 }
 
 @InputType()
@@ -52,9 +54,17 @@ class MovieResponse {
 @Resolver()
 export class MovieResolver {
   @Mutation(() => MovieResponse)
-  async createMovie(@Arg("options", () => MovieInput) options: MovieInput): Promise<MovieResponse> {
+	@UseMiddleware(isAuthenticated)
+  async createMovie(
+		@Arg("options", () => MovieInput) options: MovieInput,
+		@Ctx() { req }: MyApolloContext
+	): Promise<MovieResponse> {
 		try {
-			const movie = await Movie.create(options as any).save();
+			const movie = await Movie.create({
+				title: options.title,
+				minutes: options.minutes,
+				user: req.session.userId
+			} as any).save();
 			return { movie } ;
 		} catch (e) {
 			return {
@@ -69,6 +79,7 @@ export class MovieResolver {
   }
 
   @Mutation(() => Boolean)
+	@UseMiddleware(isAuthenticated)
   async updateMovie(
     @Arg("id", () => Int) id: number,
     @Arg("input", () => MovieUpdateInput) input: MovieUpdateInput
@@ -78,6 +89,7 @@ export class MovieResolver {
   }
 
   @Mutation(() => Boolean)
+	@UseMiddleware(isAuthenticated)
   async deleteMovie(@Arg("id", () => Int) id: number) {
     await Movie.delete({ id });
     return true;
