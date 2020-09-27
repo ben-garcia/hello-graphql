@@ -90,13 +90,17 @@ export class MovieResolver {
 
   @Mutation(() => Boolean)
 	@UseMiddleware(isAuthenticated)
-  async deleteMovie(@Arg("id", () => Int) id: number) {
+  async deleteMovie(@Arg("id", () => Int) id: number): Promise<boolean> {
+		try {
     await Movie.delete({ id });
     return true;
+		} catch (_) {
+			return false;
+		}
   }
 
   @Query(() => [Movie])
-  movies() {
+	movies(): Promise<Movie[]> {
     return Movie
 						.createQueryBuilder('movie')
 						.leftJoinAndSelect('movie.user', 'user')
