@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Icon, Table as STable } from "semantic-ui-react";
+
+import DispatchContext from "../contexts/DispatchContext";
+import { useDeleteMovieMutation } from "../generated/graphql";
 
 interface User {
   id: number;
@@ -25,13 +28,16 @@ interface Props {
 }
 
 function Table({ labels, sources, includeUsername }: Props) {
+  const [deleteMovie] = useDeleteMovieMutation();
+  const dispatch = useContext(DispatchContext);
+
   return (
     <STable celled>
       <STable.Header>
         <STable.Row>
           {labels &&
             labels.map((s: string) => (
-              <STable.HeaderCell>{s}</STable.HeaderCell>
+              <STable.HeaderCell key={s}>{s}</STable.HeaderCell>
             ))}
         </STable.Row>
       </STable.Header>
@@ -57,14 +63,25 @@ function Table({ labels, sources, includeUsername }: Props) {
                       {new Date(Number(movie.createdAt)).toLocaleDateString()}
                     </STable.Cell>
                     <STable.Cell>
-                      <Button title="Delete" color="red" icon>
-                        <Icon name="times" />
+                      <Button
+                        className="transparent"
+                        onClick={() => {
+                          deleteMovie({ variables: { id: movie.id } });
+                          dispatch({
+                            type: "DELETE_MOVIE",
+                            payload: movie.id,
+                          } as any);
+                        }}
+                        title="Delete"
+                        icon
+                      >
+                        <Icon name="trash" />
                       </Button>
                     </STable.Cell>
                   </>
                 )}
                 {includeUsername && (
-                  <STable.Cell>{movie.user.email}</STable.Cell>
+                  <STable.Cell>{movie?.user?.email}</STable.Cell>
                 )}
               </STable.Row>
             ))

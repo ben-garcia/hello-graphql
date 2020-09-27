@@ -3,6 +3,7 @@ import { UserActionTypes } from "./userReducer";
 enum MovieActions {
   GET_MOVIES = "GET_MOVIES",
   ADD_MOVIE = "ADD_MOVIE",
+  DELETE_MOVIE = "DELETE_MOVIE",
 }
 
 interface Movie {
@@ -25,7 +26,12 @@ interface AddMovie {
   payload: Movie;
 }
 
-export type MovieActionTypes = GetMovies | AddMovie;
+interface DeleteMovie {
+  type: typeof MovieActions.DELETE_MOVIE;
+  payload: number;
+}
+
+export type MovieActionTypes = GetMovies | AddMovie | DeleteMovie;
 
 export default function movieReducer(
   state: MovieState,
@@ -36,6 +42,8 @@ export default function movieReducer(
       return [...action.payload];
     case MovieActions.ADD_MOVIE:
       return [...state, action.payload];
+    case MovieActions.DELETE_MOVIE:
+      return state.filter((movie: Movie) => movie.id !== action.payload);
     default:
       return state;
   }

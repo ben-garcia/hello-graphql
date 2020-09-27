@@ -8,3 +8,7 @@ body {
   height: 520px;
   overflow: hidden scroll;
 }
+
+.transparent {
+  background: transparent !important;
+}

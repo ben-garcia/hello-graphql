@@ -149,6 +149,16 @@ export type CreateMovieMutation = (
   ) }
 );
 
+export type DeleteMovieMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteMovieMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteMovie'>
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -269,6 +279,36 @@ export function useCreateMovieMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateMovieMutationHookResult = ReturnType<typeof useCreateMovieMutation>;
 export type CreateMovieMutationResult = Apollo.MutationResult<CreateMovieMutation>;
 export type CreateMovieMutationOptions = Apollo.BaseMutationOptions<CreateMovieMutation, CreateMovieMutationVariables>;
+export const DeleteMovieDocument = gql`
+    mutation DeleteMovie($id: Int!) {
+  deleteMovie(id: $id)
+}
+    `;
+export type DeleteMovieMutationFn = Apollo.MutationFunction<DeleteMovieMutation, DeleteMovieMutationVariables>;
+
+/**
+ * __useDeleteMovieMutation__
+ *
+ * To run a mutation, you first call `useDeleteMovieMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMovieMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMovieMutation, { data, loading, error }] = useDeleteMovieMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMovieMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMovieMutation, DeleteMovieMutationVariables>) {
+        return Apollo.useMutation<DeleteMovieMutation, DeleteMovieMutationVariables>(DeleteMovieDocument, baseOptions);
+      }
+export type DeleteMovieMutationHookResult = ReturnType<typeof useDeleteMovieMutation>;
+export type DeleteMovieMutationResult = Apollo.MutationResult<DeleteMovieMutation>;
+export type DeleteMovieMutationOptions = Apollo.BaseMutationOptions<DeleteMovieMutation, DeleteMovieMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(options: {email: $email, password: $password}) {
