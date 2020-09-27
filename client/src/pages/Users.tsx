@@ -1,45 +1,35 @@
 import React from "react";
-import { Container, Header, Table } from "semantic-ui-react";
+import { Placeholder, Container, Header } from "semantic-ui-react";
 
+import Table from "../components/Table";
 import { useUsersQuery } from "../generated/graphql";
 
 function Users() {
-  const { loading, error, data } = useUsersQuery();
+  const { loading, data } = useUsersQuery();
 
   return (
     <Container>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error...</p>}
       <Header as="h1" textAlign="center">
         Users
       </Header>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Id</Table.HeaderCell>
-            <Table.HeaderCell>Email</Table.HeaderCell>
-            <Table.HeaderCell>CreatedAt</Table.HeaderCell>
-            <Table.HeaderCell>UpdatedAt</Table.HeaderCell>
-            <Table.HeaderCell># of Movies</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {data &&
-            data.users.map((user: any) => (
-              <Table.Row key={user.id}>
-                <Table.Cell>{user.id}</Table.Cell>
-                <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>
-                  {new Date(Number(user.createdAt)).toLocaleString()}
-                </Table.Cell>
-                <Table.Cell>
-                  {new Date(Number(user.updatedAt)).toLocaleString()}
-                </Table.Cell>
-                <Table.Cell>{user.movies.length}</Table.Cell>
-              </Table.Row>
-            ))}
-        </Table.Body>
-      </Table>
+      {loading ? (
+        <Placeholder>
+          <Placeholder.Image />
+          <Placeholder.Image />
+          <Placeholder.Image />
+          <Placeholder.Image />
+        </Placeholder>
+      ) : (
+        <div className="scroll-wrapper">
+          {data?.users && (
+            <Table
+              labels={["Id", "Email", "# of movies"]}
+              sources={data?.users as any}
+              includeUsername={false}
+            />
+          )}
+        </div>
+      )}
     </Container>
   );
 }

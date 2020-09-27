@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Card, Image, Grid, Header } from "semantic-ui-react";
+import { Card, Image, Placeholder, Grid, Header } from "semantic-ui-react";
 import avatar from "../avatar.png";
 
 import StateContext from "../contexts/StateContext";
@@ -10,7 +10,7 @@ function Profile() {
   const {
     user: { email, createdAt },
   } = useContext(StateContext);
-  const { data } = useMeQuery();
+  const { loading, data } = useMeQuery();
 
   return (
     <>
@@ -19,30 +19,45 @@ function Profile() {
       </Header>
       <Grid centered>
         <Grid.Column width={4}>
-          <Card>
-            <Image src={avatar} wrapped ui={false} />
-            <Card.Content>
-              <Card.Header>{email}</Card.Header>
-              <Card.Description>
-                <p>
-                  {`Created on ${new Date(
-                    Number(createdAt)
-                  ).toLocaleDateString()}`}
-                </p>
-              </Card.Description>
-            </Card.Content>
-          </Card>
+          {loading ? (
+            <Placeholder>
+              <Placeholder.Image square />
+            </Placeholder>
+          ) : (
+            <Card>
+              <Image src={avatar} wrapped ui={false} />
+              <Card.Content>
+                <Card.Header>{email}</Card.Header>
+                <Card.Description>
+                  <p>
+                    {`Created on ${new Date(
+                      Number(createdAt)
+                    ).toLocaleDateString()}`}
+                  </p>
+                </Card.Description>
+              </Card.Content>
+            </Card>
+          )}
         </Grid.Column>
         <Grid.Column width={8}>
-          <div className="scroll-wrapper">
-            {data?.me?.movies && (
-              <Table
-                labels={["id", "title", "minutes", "createdAt"]}
-                sources={data?.me?.movies as any}
-                includeUsername={false}
-              />
-            )}
-          </div>
+          {loading ? (
+            <Placeholder>
+              <Placeholder.Image />
+              <Placeholder.Image />
+              <Placeholder.Image />
+              <Placeholder.Image />
+            </Placeholder>
+          ) : (
+            <div className="scroll-wrapper">
+              {data?.me?.movies && (
+                <Table
+                  labels={["Id", "Title", "Minutes", "CreatedAt"]}
+                  sources={data?.me?.movies as any}
+                  includeUsername={false}
+                />
+              )}
+            </div>
+          )}
         </Grid.Column>
       </Grid>
     </>
