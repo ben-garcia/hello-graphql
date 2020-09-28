@@ -80,20 +80,24 @@ export class MovieResolver {
 
   @Mutation(() => Boolean)
 	@UseMiddleware(isAuthenticated)
-  async updateMovie(
+  async modifyMovie(
     @Arg("id", () => Int) id: number,
-    @Arg("input", () => MovieUpdateInput) input: MovieUpdateInput
+    @Arg("options", () => MovieUpdateInput) options: MovieUpdateInput
   ) {
-    await Movie.update({ id }, input);
-    return true;
+		try {
+			await Movie.update({ id }, {...options});
+			return true;
+		} catch (e) {
+			return false; 
+		}
   }
 
   @Mutation(() => Boolean)
 	@UseMiddleware(isAuthenticated)
   async deleteMovie(@Arg("id", () => Int) id: number): Promise<boolean> {
 		try {
-    await Movie.delete({ id });
-    return true;
+			await Movie.delete({ id });
+			return true;
 		} catch (_) {
 			return false;
 		}
