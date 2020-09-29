@@ -114,10 +114,23 @@ export class UserResolver {
 	}
 
 	@Mutation(() => Boolean)
+	@UseMiddleware(isAuthenticated)
+	async logout(
+		@Ctx() { req }: MyApolloContext
+	) {
+		req.session.destroy((err) => {
+			console.log('could not destroy session: ', err);
+			return false;
+		});
+
+		return true;
+	}
+
+	@Mutation(() => Boolean)
 	async updateUser(
 		@Arg('id', () => Int) id: number,
 		@Arg('input', () => UserUpdateInput) input: UserUpdateInput
-	) {
+	): Promise<boolean> {
 		await User.update({ id }, input);
 		return true;
 	}
