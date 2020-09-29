@@ -22,15 +22,15 @@ function Profile() {
         payload: data.me.movies,
       } as any);
     }
-  }, []);
+  }, [data, dispatch]);
 
   return (
     <>
       <Header textAlign="center" as="h1">
         Your Profile
       </Header>
-      <Grid centered>
-        <Grid.Column width={4}>
+      <Grid>
+        <Grid.Column width={5}>
           {loading ? (
             <Placeholder>
               <Placeholder.Image square />
@@ -51,7 +51,7 @@ function Profile() {
             </Card>
           )}
         </Grid.Column>
-        <Grid.Column width={8}>
+        <Grid.Column width={11}>
           {loading ? (
             <Placeholder>
               <Placeholder.Image />

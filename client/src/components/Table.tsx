@@ -3,6 +3,7 @@ import { Button, Icon, Table as STable } from "semantic-ui-react";
 
 import DispatchContext from "../contexts/DispatchContext";
 import { useDeleteMovieMutation } from "../generated/graphql";
+import ModifyMovieForm from "./ModifyMovieForm";
 
 interface User {
   id: number;
@@ -77,6 +78,14 @@ function Table({ labels, sources, includeUsername }: Props) {
                       >
                         <Icon name="trash" />
                       </Button>
+                      <ModifyMovieForm
+                        movie={movie}
+                        trigger={
+                          <Button className="transparent" title="Modify" icon>
+                            <Icon name="edit" />
+                          </Button>
+                        }
+                      />
                     </STable.Cell>
                   </>
                 )}

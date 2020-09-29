@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 
 import StateContext from "../contexts/StateContext";
 import DispatchContext from "../contexts/DispatchContext";
+import { useLogoutMutation } from "../generated/graphql";
 
 export default function Nav() {
   const history = useHistory();
@@ -12,6 +13,7 @@ export default function Nav() {
     user: { isLoggedIn },
   } = useContext(StateContext);
   const dispatch = useContext<any>(DispatchContext);
+  const [logout] = useLogoutMutation();
 
   useEffect(() => {
     const item = localStorage.getItem("activeItem");
@@ -36,18 +38,19 @@ export default function Nav() {
 
   return (
     <Menu pointing secondary>
+      <Link to="/">
+        <Menu.Item
+          name="home"
+          active={activeItem === "home"}
+          onClick={() => {
+            setActiveItem("home");
+            localStorage.setItem("activeItem", "home");
+          }}
+        />
+      </Link>
+
       {isLoggedIn ? (
         <>
-          <Link to="/">
-            <Menu.Item
-              name="home"
-              active={activeItem === "home"}
-              onClick={() => {
-                setActiveItem("home");
-                localStorage.setItem("activeItem", "home");
-              }}
-            />
-          </Link>
           <Link to="/profile">
             <Menu.Item
               name="profile"
@@ -69,7 +72,17 @@ export default function Nav() {
             />
           </Link>
           <Menu.Menu position="right">
-            <Button>Logout</Button>
+            <Button
+              onClick={async () => {
+                await logout();
+
+                localStorage.clear();
+                dispatch({ type: "LOGOUT" });
+                history.replace("/");
+              }}
+            >
+              Logout
+            </Button>
           </Menu.Menu>
         </>
       ) : (

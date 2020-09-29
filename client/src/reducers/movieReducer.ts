@@ -4,9 +4,10 @@ enum MovieActions {
   GET_MOVIES = "GET_MOVIES",
   ADD_MOVIE = "ADD_MOVIE",
   DELETE_MOVIE = "DELETE_MOVIE",
+  MODIFY_MOVIE = "MODIFY_MOVIE",
 }
 
-interface Movie {
+export interface Movie {
   id: number;
   title: string;
   minutes: number;
@@ -31,7 +32,12 @@ interface DeleteMovie {
   payload: number;
 }
 
-export type MovieActionTypes = GetMovies | AddMovie | DeleteMovie;
+interface ModifyMovie {
+  type: typeof MovieActions.MODIFY_MOVIE;
+  payload: Partial<Movie>;
+}
+
+export type MovieActionTypes = GetMovies | AddMovie | DeleteMovie | ModifyMovie;
 
 export default function movieReducer(
   state: MovieState,
@@ -44,6 +50,14 @@ export default function movieReducer(
       return [...state, action.payload];
     case MovieActions.DELETE_MOVIE:
       return state.filter((movie: Movie) => movie.id !== action.payload);
+    case MovieActions.MODIFY_MOVIE:
+      // eslint-disable-next-line
+			const newState = [...state];
+      // eslint-disable-next-line
+      const movie = newState.find((m: Movie) => m.id === action.payload.id);
+      movie!.title = action.payload.title as string;
+      movie!.minutes = action.payload.minutes as number;
+      return newState;
     default:
       return state;
   }

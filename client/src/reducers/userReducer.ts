@@ -2,6 +2,7 @@ import { MovieActionTypes } from "./movieReducer";
 
 enum UserActions {
   LOGIN = "LOGIN",
+  LOGOUT = "LOGOUT",
 }
 
 export interface UserState {
@@ -24,7 +25,11 @@ interface Login {
   payload: User;
 }
 
-export type UserActionTypes = Login;
+interface Logout {
+  type: typeof UserActions.LOGOUT;
+}
+
+export type UserActionTypes = Login | Logout;
 
 export default function userReducer(
   state: UserState,
@@ -35,6 +40,10 @@ export default function userReducer(
       return {
         ...action.payload,
         isLoggedIn: true,
+      };
+    case UserActions.LOGOUT:
+      return {
+        isLoggedIn: false,
       };
     default:
       return state;

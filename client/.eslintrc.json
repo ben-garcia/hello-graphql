@@ -42,6 +42,7 @@
     "import/extensions": 0,
     "react/jsx-props-no-spreading": 0,
     "react/jsx-indent": 0,
-    "react/jsx-curly-newline": 0
+    "react/jsx-curly-newline": 0,
+		"react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}]
   }
 }
