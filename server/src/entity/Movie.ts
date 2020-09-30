@@ -13,6 +13,10 @@ export class Movie extends BaseEntity {
   @Column()
   title: string;
 
+	@Field()
+	@Column()
+	url: string;
+
   @Field(() => Int)
   @Column("int", { default: 60 })
   minutes: number;

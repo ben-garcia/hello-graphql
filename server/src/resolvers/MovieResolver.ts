@@ -20,6 +20,9 @@ class MovieInput {
   @Field()
   title: string;
 
+	@Field()
+	url: string;
+
   @Field(() => Int)
   minutes: number;
 }
@@ -28,6 +31,9 @@ class MovieInput {
 class MovieUpdateInput {
   @Field(() => String, { nullable: true })
   title?: string;
+
+	@Field(() => String, { nullable: true })
+	url?: string;
 
   @Field(() => Int, { nullable: true })
   minutes?: number;
@@ -62,6 +68,7 @@ export class MovieResolver {
 		try {
 			const movie = await Movie.create({
 				title: options.title,
+				url: options.url,
 				minutes: options.minutes,
 				user: req.session.userId
 			} as any).save();
