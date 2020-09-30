@@ -22,6 +22,7 @@ export type Movie = {
   __typename?: 'Movie';
   id: Scalars['Int'];
   title: Scalars['String'];
+  url: Scalars['String'];
   minutes: Scalars['Int'];
   user: User;
   createdAt: Scalars['String'];
@@ -88,6 +89,7 @@ export type MutationDeleteUserArgs = {
 
 export type MovieInput = {
   title: Scalars['String'];
+  url: Scalars['String'];
   minutes: Scalars['Int'];
 };
 
@@ -105,6 +107,7 @@ export type MovieFieldError = {
 
 export type MovieUpdateInput = {
   title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
   minutes?: Maybe<Scalars['Int']>;
 };
 
@@ -132,6 +135,7 @@ export type UserUpdateInput = {
 
 export type CreateMovieMutationVariables = Exact<{
   title: Scalars['String'];
+  url: Scalars['String'];
   minutes: Scalars['Int'];
 }>;
 
@@ -145,7 +149,7 @@ export type CreateMovieMutation = (
       & Pick<MovieFieldError, 'field' | 'message'>
     )>>, movie?: Maybe<(
       { __typename?: 'Movie' }
-      & Pick<Movie, 'id' | 'title' | 'minutes' | 'createdAt' | 'updatedAt'>
+      & Pick<Movie, 'id' | 'title' | 'url' | 'minutes' | 'createdAt' | 'updatedAt'>
     )> }
   ) }
 );
@@ -221,7 +225,7 @@ export type MeQuery = (
     & Pick<User, 'id' | 'email' | 'createdAt' | 'updatedAt'>
     & { movies: Array<(
       { __typename?: 'Movie' }
-      & Pick<Movie, 'id' | 'title' | 'minutes' | 'createdAt' | 'updatedAt'>
+      & Pick<Movie, 'id' | 'title' | 'url' | 'minutes' | 'createdAt' | 'updatedAt'>
     )> }
   )> }
 );
@@ -233,7 +237,7 @@ export type MoviesQuery = (
   { __typename?: 'Query' }
   & { movies: Array<(
     { __typename?: 'Movie' }
-    & Pick<Movie, 'id' | 'title' | 'minutes' | 'createdAt' | 'updatedAt'>
+    & Pick<Movie, 'id' | 'title' | 'minutes' | 'url' | 'createdAt' | 'updatedAt'>
     & { user: (
       { __typename?: 'User' }
       & Pick<User, 'email'>
@@ -258,8 +262,8 @@ export type UsersQuery = (
 
 
 export const CreateMovieDocument = gql`
-    mutation CreateMovie($title: String!, $minutes: Int!) {
-  createMovie(options: {title: $title, minutes: $minutes}) {
+    mutation CreateMovie($title: String!, $url: String!, $minutes: Int!) {
+  createMovie(options: {title: $title, url: $url, minutes: $minutes}) {
     errors {
       field
       message
@@ -267,6 +271,7 @@ export const CreateMovieDocument = gql`
     movie {
       id
       title
+      url
       minutes
       createdAt
       updatedAt
@@ -290,6 +295,7 @@ export type CreateMovieMutationFn = Apollo.MutationFunction<CreateMovieMutation,
  * const [createMovieMutation, { data, loading, error }] = useCreateMovieMutation({
  *   variables: {
  *      title: // value for 'title'
+ *      url: // value for 'url'
  *      minutes: // value for 'minutes'
  *   },
  * });
@@ -474,6 +480,7 @@ export const MeDocument = gql`
     movies {
       id
       title
+      url
       minutes
       createdAt
       updatedAt
@@ -512,6 +519,7 @@ export const MoviesDocument = gql`
     id
     title
     minutes
+    url
     createdAt
     updatedAt
     user {

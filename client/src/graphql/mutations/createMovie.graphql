@@ -1,5 +1,5 @@
-mutation CreateMovie($title: String! $minutes: Int!) {
-  createMovie(options: { title: $title, minutes: $minutes }) {
+mutation CreateMovie($title: String! $url: String! $minutes: Int!) {
+  createMovie(options: { title: $title, url: $url, minutes: $minutes }) {
     errors {
       field
       message
@@ -7,6 +7,7 @@ mutation CreateMovie($title: String! $minutes: Int!) {
     movie {
       id
       title
+      url
       minutes
       createdAt
       updatedAt

@@ -1,10 +1,16 @@
 import React, { useContext, useEffect } from "react";
-import { Card, Image, Placeholder, Grid, Header } from "semantic-ui-react";
+import {
+  Card as SCard,
+  Image,
+  Placeholder,
+  Grid,
+  Header,
+} from "semantic-ui-react";
 import avatar from "../avatar.png";
 
 import StateContext from "../contexts/StateContext";
 import DispatchContext from "../contexts/DispatchContext";
-import Table from "../components/Table";
+import Card from "../components/Card";
 import { useMeQuery } from "../generated/graphql";
 
 function Profile() {
@@ -36,19 +42,19 @@ function Profile() {
               <Placeholder.Image square />
             </Placeholder>
           ) : (
-            <Card>
+            <SCard>
               <Image src={avatar} wrapped ui={false} />
-              <Card.Content>
-                <Card.Header>{email}</Card.Header>
-                <Card.Description>
+              <SCard.Content>
+                <SCard.Header>{email}</SCard.Header>
+                <SCard.Description>
                   <p>
                     {`Created on ${new Date(
                       Number(createdAt)
                     ).toLocaleDateString()}`}
                   </p>
-                </Card.Description>
-              </Card.Content>
-            </Card>
+                </SCard.Description>
+              </SCard.Content>
+            </SCard>
           )}
         </Grid.Column>
         <Grid.Column width={11}>
@@ -61,13 +67,12 @@ function Profile() {
             </Placeholder>
           ) : (
             <div className="scroll-wrapper">
-              {movies && (
-                <Table
-                  labels={["Id", "Title", "Minutes", "CreatedAt"]}
-                  sources={movies as any}
-                  includeUsername={false}
-                />
-              )}
+              <SCard.Group>
+                {movies &&
+                  movies.map((movie: any) => (
+                    <Card key={movie.id} modifiable movie={movie} />
+                  ))}
+              </SCard.Group>
             </div>
           )}
         </Grid.Column>

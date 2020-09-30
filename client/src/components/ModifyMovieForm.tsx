@@ -8,6 +8,7 @@ import { Movie } from "../reducers/movieReducer";
 
 interface Errors {
   title?: string;
+  url?: string;
   minutes?: string;
 }
 
@@ -33,12 +34,22 @@ function CreateMovieForm({ movie, trigger }: Props) {
         <Grid centered>
           <Grid.Column width={8}>
             <Formik
-              initialValues={{ title: movie.title, minutes: movie.minutes }}
+              initialValues={{
+                title: movie.title,
+                url: movie.url,
+                minutes: movie.minutes,
+              }}
               validate={(values) => {
                 const errors: Errors = {};
 
                 if (!values.title) {
                   errors.title = "Required";
+                }
+
+                if (!values.url) {
+                  errors.url = "Required";
+                } else if (!/^https:\/\//.test(values.url)) {
+                  errors.url = "enter a valid url";
                 }
 
                 if (!values.minutes) {
@@ -96,6 +107,16 @@ function CreateMovieForm({ movie, trigger }: Props) {
                     value={values.title}
                     error={errors.title}
                   />
+                  <Form.Input
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    name="url"
+                    label="Url"
+                    value={values.url}
+                    error={errors.url}
+                  />
+
                   <Form.Input
                     onBlur={handleBlur}
                     onChange={handleChange}

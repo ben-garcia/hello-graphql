@@ -1,4 +1,4 @@
-import { MovieActionTypes } from "./movieReducer";
+import { MovieActionTypes, Movie } from "./movieReducer";
 
 enum UserActions {
   LOGIN = "LOGIN",
@@ -13,11 +13,12 @@ export interface UserState {
   updatedAt?: string;
 }
 
-interface User {
+export interface User {
   id: number;
   email: string;
   createdAt: string;
   updatedAt?: string;
+  movies: Movie[];
 }
 
 interface Login {

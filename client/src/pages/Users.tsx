@@ -1,7 +1,7 @@
 import React from "react";
-import { Placeholder, Container, Header } from "semantic-ui-react";
+import { Table, Grid, Placeholder, Container, Header } from "semantic-ui-react";
 
-import Table from "../components/Table";
+import Card from "../components/Card";
 import { useUsersQuery } from "../generated/graphql";
 
 function Users() {
@@ -21,13 +21,31 @@ function Users() {
         </Placeholder>
       ) : (
         <div className="scroll-wrapper">
-          {data?.users && (
-            <Table
-              labels={["Id", "Email", "# of movies"]}
-              sources={data?.users as any}
-              includeUsername={false}
-            />
-          )}
+          <Table basic>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Id</Table.HeaderCell>
+                <Table.HeaderCell>Email</Table.HeaderCell>
+                <Table.HeaderCell>Joined On</Table.HeaderCell>
+                <Table.HeaderCell># of Movies</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {data?.users &&
+                data?.users.map((user: any) => (
+                  <Table.Row>
+                    <Table.Cell>{user.id}</Table.Cell>
+                    <Table.Cell>{user.email}</Table.Cell>
+                    <Table.Cell>
+                      {`${new Date(
+                        Number(user.createdAt)
+                      ).toLocaleDateString()}`}
+                    </Table.Cell>
+                    <Table.Cell>{user.movies.length}</Table.Cell>
+                  </Table.Row>
+                ))}
+            </Table.Body>
+          </Table>
         </div>
       )}
     </Container>

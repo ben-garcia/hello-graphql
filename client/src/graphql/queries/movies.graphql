@@ -3,6 +3,7 @@ query Movies {
     id
     title
     minutes
+    url
     createdAt
     updatedAt
     user {

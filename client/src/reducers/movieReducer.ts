@@ -10,9 +10,13 @@ enum MovieActions {
 export interface Movie {
   id: number;
   title: string;
+  url: string;
   minutes: number;
   createdAt: string;
   updatedAt: string;
+  user: {
+    email: string;
+  };
 }
 
 export type MovieState = Movie[];

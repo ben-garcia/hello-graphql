@@ -8,6 +8,7 @@ import DispatchContext from "../contexts/DispatchContext";
 
 interface Errors {
   title?: string;
+  url?: string;
   minutes?: string;
 }
 
@@ -44,12 +45,18 @@ function CreateMovieForm({ trigger }: Props) {
         <Grid centered>
           <Grid.Column width={8}>
             <Formik
-              initialValues={{ title: "", minutes: 60 }}
+              initialValues={{ title: "", url: "", minutes: 60 }}
               validate={(values) => {
                 const errors: Errors = {};
 
                 if (!values.title) {
                   errors.title = "Required";
+                }
+
+                if (!values.url) {
+                  errors.url = "Required";
+                } else if (!/^https:\/\//.test(values.url)) {
+                  errors.url = "Not a valid url";
                 }
 
                 if (!values.minutes) {
@@ -63,6 +70,7 @@ function CreateMovieForm({ trigger }: Props) {
                   const response = await createMovie({
                     variables: {
                       title: values.title,
+                      url: values.url,
                       minutes: Number(values.minutes),
                     },
                   });
@@ -110,6 +118,15 @@ function CreateMovieForm({ trigger }: Props) {
                     label="Title"
                     error={errors.title}
                   />
+                  <Form.Input
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    name="url"
+                    label="Url"
+                    error={errors.url}
+                  />
+
                   <Form.Input
                     onBlur={handleBlur}
                     onChange={handleChange}

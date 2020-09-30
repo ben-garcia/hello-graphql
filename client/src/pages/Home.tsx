@@ -1,8 +1,14 @@
 import React, { useContext, useEffect } from "react";
-import { Button, Container, Placeholder, Header } from "semantic-ui-react";
+import {
+  Button,
+  Container,
+  Card as SCard,
+  Placeholder,
+  Header,
+} from "semantic-ui-react";
 
 import CreateMovieForm from "../components/CreateMovieForm";
-import Table from "../components/Table";
+import Card from "../components/Card";
 
 import { useMoviesQuery } from "../generated/graphql";
 import StateContext from "../contexts/StateContext";
@@ -34,13 +40,10 @@ function Home() {
         </Placeholder>
       ) : (
         <div className="scroll-wrapper">
-          {data?.movies && (
-            <Table
-              labels={["Id", "Title", "Minutes", "Created By"]}
-              sources={movies as any}
-              includeUsername
-            />
-          )}
+          <SCard.Group>
+            {movies &&
+              movies.map((movie: any) => <Card key={movie.id} movie={movie} />)}
+          </SCard.Group>
         </div>
       )}
     </Container>
