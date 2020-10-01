@@ -15,7 +15,10 @@ import StateContext from "../contexts/StateContext";
 import DispatchContext from "../contexts/DispatchContext";
 
 function Home() {
-  const { movies } = useContext(StateContext);
+  const {
+    movies,
+    user: { isLoggedIn },
+  } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
   const { loading, data } = useMoviesQuery();
   useEffect(() => {
@@ -30,7 +33,9 @@ function Home() {
       <Header as="h1" textAlign="center">
         Movies
       </Header>
-      <CreateMovieForm trigger={<Button primary>Add a movie</Button>} />
+      {isLoggedIn && (
+        <CreateMovieForm trigger={<Button primary>Add a movie</Button>} />
+      )}
       {loading ? (
         <Placeholder>
           <Placeholder.Image />

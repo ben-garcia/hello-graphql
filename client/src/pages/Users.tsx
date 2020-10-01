@@ -1,7 +1,6 @@
 import React from "react";
-import { Table, Grid, Placeholder, Container, Header } from "semantic-ui-react";
+import { Table, Placeholder, Container, Header } from "semantic-ui-react";
 
-import Card from "../components/Card";
 import { useUsersQuery } from "../generated/graphql";
 
 function Users() {
