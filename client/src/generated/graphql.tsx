@@ -14,8 +14,14 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   movies: Array<Movie>;
+  movie?: Maybe<Movie>;
   users: Array<User>;
   me?: Maybe<User>;
+};
+
+
+export type QueryMovieArgs = {
+  id: Scalars['Int'];
 };
 
 export type Movie = {
@@ -227,6 +233,23 @@ export type MeQuery = (
       { __typename?: 'Movie' }
       & Pick<Movie, 'id' | 'title' | 'url' | 'minutes' | 'createdAt' | 'updatedAt'>
     )> }
+  )> }
+);
+
+export type MovieQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type MovieQuery = (
+  { __typename?: 'Query' }
+  & { movie?: Maybe<(
+    { __typename?: 'Movie' }
+    & Pick<Movie, 'id' | 'title' | 'url' | 'minutes' | 'createdAt' | 'updatedAt'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'email'>
+    ) }
   )> }
 );
 
@@ -513,6 +536,47 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MovieDocument = gql`
+    query Movie($id: Int!) {
+  movie(id: $id) {
+    id
+    title
+    url
+    minutes
+    createdAt
+    updatedAt
+    user {
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useMovieQuery__
+ *
+ * To run a query within a React component, call `useMovieQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMovieQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useMovieQuery(baseOptions?: Apollo.QueryHookOptions<MovieQuery, MovieQueryVariables>) {
+        return Apollo.useQuery<MovieQuery, MovieQueryVariables>(MovieDocument, baseOptions);
+      }
+export function useMovieLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MovieQuery, MovieQueryVariables>) {
+          return Apollo.useLazyQuery<MovieQuery, MovieQueryVariables>(MovieDocument, baseOptions);
+        }
+export type MovieQueryHookResult = ReturnType<typeof useMovieQuery>;
+export type MovieLazyQueryHookResult = ReturnType<typeof useMovieLazyQuery>;
+export type MovieQueryResult = Apollo.QueryResult<MovieQuery, MovieQueryVariables>;
 export const MoviesDocument = gql`
     query Movies {
   movies {

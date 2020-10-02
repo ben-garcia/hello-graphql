@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Nav from "../components/Nav";
-import { Home, Login, Profile, Register, Users } from "../pages";
+import { Home, Login, Movie, Profile, Register, Users } from "../pages";
 import ProtectedRoutes from "./ProtectedRoutes";
 
 function Routes() {
@@ -18,6 +18,9 @@ function Routes() {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/movie/:id">
+          <Movie />
         </Route>
         <ProtectedRoutes>
           <Route path="/users">
