@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Button, Image, Icon, Card as SCard } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import DispatchContext from "../contexts/DispatchContext";
 import { useDeleteMovieMutation } from "../generated/graphql";
@@ -32,13 +32,26 @@ interface Props {
 function Card({ movie, modifiable = false }: Props) {
   const [deleteMovie] = useDeleteMovieMutation();
   const dispatch = useContext<any>(DispatchContext);
+  const history = useHistory();
 
   if (!movie) return null;
 
   return (
     <SCard style={{ maxWidth: "200px" }}>
       <>
-        {movie.url && <Image size="mini" src={movie.url} wrapped ui={false} />}
+        {movie.url && (
+          <Image
+            className="hoverable"
+            onClick={(e: any) => {
+              e.preventDefault();
+              history.push(`/movie/${movie.id}`);
+            }}
+            size="mini"
+            src={movie.url}
+            wrapped
+            ui={false}
+          />
+        )}
       </>
       <SCard.Content>
         <SCard.Header>{movie.title}</SCard.Header>

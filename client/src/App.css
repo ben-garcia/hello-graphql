@@ -12,3 +12,13 @@ body {
 .transparent {
   background: transparent !important;
 }
+
+.hoverable {
+  overflow: hidden !important;
+  transition: all 0.2s;
+}
+
+.hoverable:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
