@@ -62,6 +62,7 @@ function CreateMovieForm({ movie, trigger }: Props) {
                 try {
                   const modifiedMovie = {
                     id: movie.id,
+                    url: values.url,
                     title: values.title,
                     minutes: Number(values.minutes),
                   };

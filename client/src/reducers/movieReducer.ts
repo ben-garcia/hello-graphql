@@ -59,8 +59,16 @@ export default function movieReducer(
 			const newState = [...state];
       // eslint-disable-next-line
       const movie = newState.find((m: Movie) => m.id === action.payload.id);
-      movie!.title = action.payload.title as string;
-      movie!.minutes = action.payload.minutes as number;
+      // eslint-disable-next-line
+      const index = newState.findIndex(
+        (m: Movie) => m.id === action.payload.id
+      );
+      // eslint-disable-next-line
+      const newMovie: any = { ...movie };
+      newMovie.title = action.payload.title;
+      newMovie.url = action.payload.url;
+      newMovie.minutes = action.payload.minutes;
+      newState.splice(index, 1, newMovie);
       return newState;
     default:
       return state;

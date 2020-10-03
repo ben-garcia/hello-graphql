@@ -36,40 +36,40 @@ function Card({ movie, modifiable = false }: Props) {
   if (!movie) return null;
 
   return (
-    <Link to={`/movie/${movie.id}`}>
-      <SCard style={{ maxWidth: "200px" }}>
+    <SCard style={{ maxWidth: "200px" }}>
+      <>
         {movie.url && <Image size="mini" src={movie.url} wrapped ui={false} />}
-        <SCard.Content>
-          <SCard.Header>{movie.title}</SCard.Header>
-          <SCard.Meta>
-            {movie.minutes && <span>{`${movie.minutes} minutes`}</span>}
-          </SCard.Meta>
+      </>
+      <SCard.Content>
+        <SCard.Header>{movie.title}</SCard.Header>
+        <SCard.Meta>
+          {movie.minutes && <span>{`${movie.minutes} minutes`}</span>}
+        </SCard.Meta>
+      </SCard.Content>
+      {modifiable && (
+        <SCard.Content extra>
+          <Button
+            onClick={() => {
+              deleteMovie({ variables: { id: movie.id } });
+              dispatch({ type: "DELETE_MOVIE", payload: movie.id });
+            }}
+            title="Delete"
+            className="transparent"
+            icon
+          >
+            <Icon name="trash" />
+          </Button>
+          <ModifyMovieForm
+            movie={movie}
+            trigger={
+              <Button title="Modify" className="transparent" icon>
+                <Icon name="edit" />
+              </Button>
+            }
+          />
         </SCard.Content>
-        {modifiable && (
-          <SCard.Content extra>
-            <Button
-              onClick={() => {
-                deleteMovie({ variables: { id: movie.id } });
-                dispatch({ type: "DELETE_MOVIE", payload: movie.id });
-              }}
-              title="Delete"
-              className="transparent"
-              icon
-            >
-              <Icon name="trash" />
-            </Button>
-            <ModifyMovieForm
-              movie={movie}
-              trigger={
-                <Button title="Modify" className="transparent" icon>
-                  <Icon name="edit" />
-                </Button>
-              }
-            />
-          </SCard.Content>
-        )}
-      </SCard>
-    </Link>
+      )}
+    </SCard>
   );
 }
 
