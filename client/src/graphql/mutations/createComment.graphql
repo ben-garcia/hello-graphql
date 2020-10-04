@@ -1,0 +1,17 @@
+mutation CreateComment($movieId: Int!, $content: String!) {
+  createComment(options: { movieId: $movieId content: $content }){
+    errors {
+      field
+      message
+    }
+    comment {
+      id
+      content
+      createdAt
+      updatedAt
+      user {
+        email
+      }
+    }
+  }
+}

@@ -30,6 +30,17 @@ export type Movie = {
   title: Scalars['String'];
   url: Scalars['String'];
   minutes: Scalars['Int'];
+  comments: Array<Comment>;
+  user: User;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['Int'];
+  content: Scalars['String'];
+  movie: Movie;
   user: User;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -40,6 +51,7 @@ export type User = {
   id: Scalars['Int'];
   email: Scalars['String'];
   movies: Array<Movie>;
+  comments: Array<Comment>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -54,6 +66,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   updateUser: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
+  createComment: CommentResponse;
 };
 
 
@@ -91,6 +104,11 @@ export type MutationUpdateUserArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['Int'];
+};
+
+
+export type MutationCreateCommentArgs = {
+  options: CommentInput;
 };
 
 export type MovieInput = {
@@ -138,6 +156,47 @@ export type UserUpdateInput = {
   email?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
 };
+
+export type CommentInput = {
+  content: Scalars['String'];
+  movieId: Scalars['Int'];
+};
+
+export type CommentResponse = {
+  __typename?: 'CommentResponse';
+  errors?: Maybe<Array<CommentFieldError>>;
+  comment?: Maybe<Comment>;
+};
+
+export type CommentFieldError = {
+  __typename?: 'CommentFieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type CreateCommentMutationVariables = Exact<{
+  movieId: Scalars['Int'];
+  content: Scalars['String'];
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment: (
+    { __typename?: 'CommentResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'CommentFieldError' }
+      & Pick<CommentFieldError, 'field' | 'message'>
+    )>>, comment?: Maybe<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'content' | 'createdAt' | 'updatedAt'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'email'>
+      ) }
+    )> }
+  ) }
+);
 
 export type CreateMovieMutationVariables = Exact<{
   title: Scalars['String'];
@@ -246,10 +305,14 @@ export type MovieQuery = (
   & { movie?: Maybe<(
     { __typename?: 'Movie' }
     & Pick<Movie, 'id' | 'title' | 'url' | 'minutes' | 'createdAt' | 'updatedAt'>
-    & { user: (
-      { __typename?: 'User' }
-      & Pick<User, 'email'>
-    ) }
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'content' | 'createdAt' | 'updatedAt'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'email'>
+      ) }
+    )> }
   )> }
 );
 
@@ -284,6 +347,51 @@ export type UsersQuery = (
 );
 
 
+export const CreateCommentDocument = gql`
+    mutation CreateComment($movieId: Int!, $content: String!) {
+  createComment(options: {movieId: $movieId, content: $content}) {
+    errors {
+      field
+      message
+    }
+    comment {
+      id
+      content
+      createdAt
+      updatedAt
+      user {
+        email
+      }
+    }
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      movieId: // value for 'movieId'
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, baseOptions);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
 export const CreateMovieDocument = gql`
     mutation CreateMovie($title: String!, $url: String!, $minutes: Int!) {
   createMovie(options: {title: $title, url: $url, minutes: $minutes}) {
@@ -545,8 +653,14 @@ export const MovieDocument = gql`
     minutes
     createdAt
     updatedAt
-    user {
-      email
+    comments {
+      id
+      content
+      createdAt
+      updatedAt
+      user {
+        email
+      }
     }
   }
 }

@@ -6,8 +6,14 @@ query Movie($id: Int!) {
     minutes
     createdAt
     updatedAt
-    user {
-      email
+    comments {
+      id
+      content
+      createdAt
+      updatedAt
+      user {
+        email
+      } 
     }
   }
 }
