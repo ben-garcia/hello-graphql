@@ -121,7 +121,7 @@ export class MovieResolver {
 	@Query(() => Movie, { nullable: true })
 	async movie(@Arg("id", () => Int!) id: number): Promise<Movie | undefined> {
 		try {
-		const movie = await Movie.findOne({ relations: ['user'], where: { id } });
+			const movie = await Movie.findOne({ relations: ['user', 'comments', 'comments.user'], where: { id } });
 			return movie;
 		} catch (e) {
 			return undefined;

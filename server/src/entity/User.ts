@@ -12,6 +12,7 @@ import { Field, ObjectType, Int } from 'type-graphql';
 import * as argon2 from 'argon2';
 
 import { Movie } from '../entity/Movie';
+import { Comment } from '../entity/Comment';
 
 @ObjectType()
 @Entity()
@@ -30,6 +31,10 @@ export class User extends BaseEntity {
 	@Field(() => [Movie])
 	@OneToMany(() => Movie, movie => movie.user, { onDelete: 'CASCADE' })
 	movies: Movie[];
+
+	@Field(() => [Comment])
+	@OneToMany(() => Comment, comment => comment.user, { onDelete: 'CASCADE' })
+	comments: Comment[];
 
 	@Field(() => String)
 	@CreateDateColumn()

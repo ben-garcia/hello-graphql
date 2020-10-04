@@ -11,6 +11,7 @@ import connectRedis from 'connect-redis';
 
 import { MovieResolver } from "./resolvers/MovieResolver";
 import { UserResolver } from "./resolvers/UserResolver";
+import { CommentResolver } from "./resolvers/CommentResolver";
 
 (async () => {
   const app = express();
@@ -45,7 +46,7 @@ import { UserResolver } from "./resolvers/UserResolver";
 
   const apolloServer: ApolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [MovieResolver, UserResolver]
+      resolvers: [MovieResolver, UserResolver, CommentResolver]
     }),
 		context: ({ req }) => ({ req })
   });
