@@ -1,4 +1,4 @@
-mutation CreateComment($movieId: Int!, $content: String!) {
+mutation CreateComment($movieId: String!, $content: String!) {
   createComment(options: { movieId: $movieId content: $content }){
     errors {
       field

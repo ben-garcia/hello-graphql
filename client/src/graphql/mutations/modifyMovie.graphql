@@ -1,4 +1,4 @@
-mutation ModifyMovie($id: Int!, $title: String, $minutes: Int) {
+mutation ModifyMovie($id: String!, $title: String, $minutes: Int) {
   modifyMovie(id: $id, options: { title: $title minutes: $minutes })
 }
 

@@ -4,7 +4,7 @@ import { AppState } from "../reducers";
 
 export const initialState: AppState = {
   user: {
-    id: 0,
+    id: "0",
     isLoggedIn: false,
     email: "",
     createdAt: "",

@@ -1,4 +1,4 @@
-query Movie($id: Int!) {
+query Movie($id: String!) {
   movie(id: $id) {
     id
     title

@@ -8,7 +8,7 @@ enum MovieActions {
 }
 
 export interface Movie {
-  id: number;
+  id: string;
   title: string;
   url: string;
   minutes: number;
@@ -33,7 +33,7 @@ interface AddMovie {
 
 interface DeleteMovie {
   type: typeof MovieActions.DELETE_MOVIE;
-  payload: number;
+  payload: string;
 }
 
 interface ModifyMovie {

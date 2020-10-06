@@ -32,7 +32,7 @@ function Movie() {
   }, [id]);
 
   const { data } = useMovieQuery({
-    variables: { id: Number(id) },
+    variables: { id: id as string },
   });
 
   useEffect(() => {
@@ -88,7 +88,6 @@ function Movie() {
               {comments.length &&
                 comments.map((c: any) => (
                   <Comment key={c.id}>
-                    <Comment.Avatar src="/images/avatar/small/matt.jpg" />
                     <Comment.Content>
                       <Comment.Author>{c.user.email}</Comment.Author>
                       <Comment.Metadata>
@@ -109,7 +108,7 @@ function Movie() {
               e.preventDefault();
               try {
                 const response = await createComment({
-                  variables: { content, movieId: data?.movie?.id as number },
+                  variables: { content, movieId: data?.movie?.id as string },
                 });
 
                 if (response.data?.createComment.comment) {

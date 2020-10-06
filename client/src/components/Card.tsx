@@ -7,7 +7,7 @@ import { useDeleteMovieMutation } from "../generated/graphql";
 import ModifyMovieForm from "./ModifyMovieForm";
 
 interface User {
-  id: number;
+  id: string;
   email: string;
   createdAt: string;
   updatedAt?: string;
@@ -15,7 +15,7 @@ interface User {
 }
 
 interface Movie {
-  id: number;
+  id: string;
   title: string;
   url: string;
   minutes: number;

@@ -21,12 +21,12 @@ export type Query = {
 
 
 export type QueryMovieArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 export type Movie = {
   __typename?: 'Movie';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   title: Scalars['String'];
   url: Scalars['String'];
   minutes: Scalars['Int'];
@@ -38,7 +38,7 @@ export type Movie = {
 
 export type Comment = {
   __typename?: 'Comment';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   content: Scalars['String'];
   movie: Movie;
   user: User;
@@ -48,7 +48,7 @@ export type Comment = {
 
 export type User = {
   __typename?: 'User';
-  id: Scalars['Int'];
+  id: Scalars['String'];
   email: Scalars['String'];
   movies: Array<Movie>;
   comments: Array<Comment>;
@@ -58,6 +58,7 @@ export type User = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createComment: CommentResponse;
   createMovie: MovieResponse;
   modifyMovie: Scalars['Boolean'];
   deleteMovie: Scalars['Boolean'];
@@ -66,7 +67,11 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   updateUser: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
-  createComment: CommentResponse;
+};
+
+
+export type MutationCreateCommentArgs = {
+  options: CommentInput;
 };
 
 
@@ -77,12 +82,12 @@ export type MutationCreateMovieArgs = {
 
 export type MutationModifyMovieArgs = {
   options: MovieUpdateInput;
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteMovieArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 
@@ -98,17 +103,29 @@ export type MutationLoginArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UserUpdateInput;
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['Int'];
+  id: Scalars['String'];
 };
 
+export type CommentInput = {
+  content: Scalars['String'];
+  movieId: Scalars['String'];
+};
 
-export type MutationCreateCommentArgs = {
-  options: CommentInput;
+export type CommentResponse = {
+  __typename?: 'CommentResponse';
+  errors?: Maybe<Array<CommentFieldError>>;
+  comment?: Maybe<Comment>;
+};
+
+export type CommentFieldError = {
+  __typename?: 'CommentFieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
 };
 
 export type MovieInput = {
@@ -157,25 +174,8 @@ export type UserUpdateInput = {
   password?: Maybe<Scalars['String']>;
 };
 
-export type CommentInput = {
-  content: Scalars['String'];
-  movieId: Scalars['Int'];
-};
-
-export type CommentResponse = {
-  __typename?: 'CommentResponse';
-  errors?: Maybe<Array<CommentFieldError>>;
-  comment?: Maybe<Comment>;
-};
-
-export type CommentFieldError = {
-  __typename?: 'CommentFieldError';
-  field: Scalars['String'];
-  message: Scalars['String'];
-};
-
 export type CreateCommentMutationVariables = Exact<{
-  movieId: Scalars['Int'];
+  movieId: Scalars['String'];
   content: Scalars['String'];
 }>;
 
@@ -220,7 +220,7 @@ export type CreateMovieMutation = (
 );
 
 export type DeleteMovieMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
 }>;
 
 
@@ -258,7 +258,7 @@ export type LogoutMutation = (
 );
 
 export type ModifyMovieMutationVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   minutes?: Maybe<Scalars['Int']>;
 }>;
@@ -296,7 +296,7 @@ export type MeQuery = (
 );
 
 export type MovieQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['String'];
 }>;
 
 
@@ -348,7 +348,7 @@ export type UsersQuery = (
 
 
 export const CreateCommentDocument = gql`
-    mutation CreateComment($movieId: Int!, $content: String!) {
+    mutation CreateComment($movieId: String!, $content: String!) {
   createComment(options: {movieId: $movieId, content: $content}) {
     errors {
       field
@@ -438,7 +438,7 @@ export type CreateMovieMutationHookResult = ReturnType<typeof useCreateMovieMuta
 export type CreateMovieMutationResult = Apollo.MutationResult<CreateMovieMutation>;
 export type CreateMovieMutationOptions = Apollo.BaseMutationOptions<CreateMovieMutation, CreateMovieMutationVariables>;
 export const DeleteMovieDocument = gql`
-    mutation DeleteMovie($id: Int!) {
+    mutation DeleteMovie($id: String!) {
   deleteMovie(id: $id)
 }
     `;
@@ -539,7 +539,7 @@ export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const ModifyMovieDocument = gql`
-    mutation ModifyMovie($id: Int!, $title: String, $minutes: Int) {
+    mutation ModifyMovie($id: String!, $title: String, $minutes: Int) {
   modifyMovie(id: $id, options: {title: $title, minutes: $minutes})
 }
     `;
@@ -645,7 +645,7 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const MovieDocument = gql`
-    query Movie($id: Int!) {
+    query Movie($id: String!) {
   movie(id: $id) {
     id
     title
