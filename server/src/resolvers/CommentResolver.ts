@@ -1,75 +1,75 @@
 import {
   Arg,
-	Ctx,
+  Ctx,
   Field,
-	Int,
   InputType,
   Mutation,
-	ObjectType,
+  ObjectType,
   Resolver,
-	UseMiddleware
-} from "type-graphql";
+  UseMiddleware,
+} from 'type-graphql';
 
-import { User } from "../entity/User";
-import { Comment } from "../entity/Comment";
-import isAuthenticated from "../middleware/isAuthenticated";
-import {  MyApolloContext } from '../types';
+import { Comment, User } from '../entity';
+import isAuthenticated from '../middleware/isAuthenticated';
+import { MyApolloContext } from '../types';
 
 @InputType()
 class CommentInput {
   @Field()
   content: string;
 
-	@Field(() => Int)
-	movieId: number;
+  @Field(() => String)
+  movieId: string;
 }
 
 @ObjectType()
 class CommentFieldError {
-	@Field()
-	field: string;
-	
-	@Field()
-	message: string;
+  @Field()
+  field: string;
+
+  @Field()
+  message: string;
 }
 
 @ObjectType()
 class CommentResponse {
-	@Field(() => [CommentFieldError], { nullable: true } )
-	errors?: CommentFieldError[];
+  @Field(() => [CommentFieldError], { nullable: true })
+  errors?: CommentFieldError[];
 
-	@Field(() => Comment, { nullable: true })
-	comment?: Comment;
+  @Field(() => Comment, { nullable: true })
+  comment?: Comment;
 }
 
 @Resolver()
-export class CommentResolver {
+class CommentResolver {
   @Mutation(() => CommentResponse)
-	@UseMiddleware(isAuthenticated)
+  @UseMiddleware(isAuthenticated)
   async createComment(
-		@Arg("options", () => CommentInput) options: CommentInput,
-		@Ctx() { req }: MyApolloContext
-	): Promise<CommentResponse> {
-		try {
-			const user = await User.findOne(req.session.userId);
-			const comment = await Comment.create({
-				content: options.content,
-				movie: Number(options.movieId),
-				user: req.session.userId
-			} as any).save();
+    @Arg('options', () => CommentInput) options: CommentInput,
+    @Ctx() { req }: MyApolloContext
+  ): Promise<CommentResponse> {
+    try {
+      const user = await User.findOne(req.session.userId);
+      const comment = await Comment.create({
+        content: options.content,
+        movie: options.movieId,
+        user: req.session.userId,
+      } as any).save();
 
-			comment.user = user as User;
+      comment.user = user as User;
 
-			return { comment } ;
-		} catch (e) {
-			return {
-				errors: [
-					{
-						field: '',
-						message: e.message,
-					}
-				]
-			}
-		}
+      return { comment };
+    } catch (e) {
+      return {
+        errors: [
+          {
+            field: '',
+            message: e.message,
+          },
+        ],
+      };
+    }
   }
 }
+
+export default CommentResolver;

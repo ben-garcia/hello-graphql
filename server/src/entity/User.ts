@@ -1,46 +1,46 @@
 import {
-	CreateDateColumn,
-	UpdateDateColumn,
-	BeforeInsert,
-	OneToMany,
-	BaseEntity,
-	Entity,
-	PrimaryGeneratedColumn,
-	Column
-} from "typeorm";
-import { Field, ObjectType, Int } from 'type-graphql';
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+  OneToMany,
+  BaseEntity,
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+} from 'typeorm';
+import { Field, ObjectType } from 'type-graphql';
 import * as argon2 from 'argon2';
 
-import { Movie } from '../entity/Movie';
-import { Comment } from '../entity/Comment';
+import Movie from './Movie';
+import Comment from './Comment';
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
-	@Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id: number;
+class User extends BaseEntity {
+  @Field(() => String)
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-	@Field()
-  @Column({ unique: true})
+  @Field()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
 
-	@Field(() => [Movie])
-	@OneToMany(() => Movie, movie => movie.user, { onDelete: 'CASCADE' })
-	movies: Movie[];
+  @Field(() => [Movie])
+  @OneToMany(() => Movie, movie => movie.user, { onDelete: 'CASCADE' })
+  movies: Movie[];
 
-	@Field(() => [Comment])
-	@OneToMany(() => Comment, comment => comment.user, { onDelete: 'CASCADE' })
-	comments: Comment[];
+  @Field(() => [Comment])
+  @OneToMany(() => Comment, comment => comment.user, { onDelete: 'CASCADE' })
+  comments: Comment[];
 
-	@Field(() => String)
-	@CreateDateColumn()
+  @Field(() => String)
+  @CreateDateColumn()
   createdAt: Date;
 
-	@Field(() => String)
+  @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -55,3 +55,5 @@ export class User extends BaseEntity {
     }
   };
 }
+
+export default User;
