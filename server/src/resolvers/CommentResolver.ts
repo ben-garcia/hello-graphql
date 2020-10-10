@@ -70,6 +70,54 @@ class CommentResolver {
       };
     }
   }
+
+  @Mutation(() => CommentResponse)
+  @UseMiddleware(isAuthenticated)
+  async modifyComment(
+    @Arg('id', () => String) id: string,
+    @Arg('content', () => String) content: string,
+    @Ctx() { req }: MyApolloContext
+  ): Promise<CommentResponse> {
+    try {
+      const updatedResult = await Comment.createQueryBuilder()
+        .update()
+        .set({ content })
+        .where('id = :id', { id })
+        .returning('*')
+        .execute();
+
+      return {
+        comment: {
+          ...updatedResult.raw[0],
+          user: { email: req.session.userEmail },
+        },
+      };
+    } catch (e) {
+      return {
+        errors: [
+          {
+            field: 'content',
+            message: 'failed to updated',
+          },
+        ],
+      };
+    }
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async deleteComment(@Arg('id', () => String) id: number): Promise<boolean> {
+    try {
+      await Comment.createQueryBuilder()
+        .delete()
+        .where('id = :id', { id })
+        .execute();
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  }
 }
 
 export default CommentResolver;

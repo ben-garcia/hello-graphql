@@ -100,6 +100,7 @@ class UserResolver {
       }
 
       req.session.userId = user.id;
+      req.session.userEmail = user.email;
 
       return { user };
     } catch (e) {
