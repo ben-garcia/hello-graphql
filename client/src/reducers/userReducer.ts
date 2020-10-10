@@ -1,4 +1,5 @@
 import { MovieActionTypes, Movie } from "./movieReducer";
+import { CommentActionTypes } from "./commentReducer";
 
 enum UserActions {
   LOGIN = "LOGIN",
@@ -34,7 +35,7 @@ export type UserActionTypes = Login | Logout;
 
 export default function userReducer(
   state: UserState,
-  action: UserActionTypes | MovieActionTypes
+  action: CommentActionTypes | UserActionTypes | MovieActionTypes
 ): UserState {
   switch (action.type) {
     case UserActions.LOGIN:

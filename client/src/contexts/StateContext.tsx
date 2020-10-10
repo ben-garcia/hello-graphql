@@ -3,6 +3,8 @@ import { createContext } from "react";
 import { AppState } from "../reducers";
 
 export const initialState: AppState = {
+  comments: [],
+  movies: [],
   user: {
     id: "0",
     isLoggedIn: false,
@@ -10,7 +12,6 @@ export const initialState: AppState = {
     createdAt: "",
     updatedAt: "",
   },
-  movies: [],
 };
 
 const StateContext = createContext<AppState>(initialState);

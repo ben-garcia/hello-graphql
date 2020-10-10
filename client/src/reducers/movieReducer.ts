@@ -1,4 +1,5 @@
 import { UserActionTypes } from "./userReducer";
+import { CommentActionTypes } from "./commentReducer";
 
 enum MovieActions {
   GET_MOVIES = "GET_MOVIES",
@@ -45,7 +46,7 @@ export type MovieActionTypes = GetMovies | AddMovie | DeleteMovie | ModifyMovie;
 
 export default function movieReducer(
   state: MovieState,
-  action: MovieActionTypes | UserActionTypes
+  action: CommentActionTypes | MovieActionTypes | UserActionTypes
 ): MovieState {
   switch (action.type) {
     case MovieActions.GET_MOVIES:
