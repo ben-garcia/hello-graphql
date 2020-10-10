@@ -59,6 +59,8 @@ export type User = {
 export type Mutation = {
   __typename?: 'Mutation';
   createComment: CommentResponse;
+  modifyComment: CommentResponse;
+  deleteComment: Scalars['Boolean'];
   createMovie: MovieResponse;
   modifyMovie: Scalars['Boolean'];
   deleteMovie: Scalars['Boolean'];
@@ -72,6 +74,17 @@ export type Mutation = {
 
 export type MutationCreateCommentArgs = {
   options: CommentInput;
+};
+
+
+export type MutationModifyCommentArgs = {
+  content: Scalars['String'];
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -219,6 +232,16 @@ export type CreateMovieMutation = (
   ) }
 );
 
+export type DeleteCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteComment'>
+);
+
 export type DeleteMovieMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -255,6 +278,30 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'logout'>
+);
+
+export type ModifyCommentMutationVariables = Exact<{
+  id: Scalars['String'];
+  content: Scalars['String'];
+}>;
+
+
+export type ModifyCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { modifyComment: (
+    { __typename?: 'CommentResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'CommentFieldError' }
+      & Pick<CommentFieldError, 'field' | 'message'>
+    )>>, comment?: Maybe<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'content'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'email'>
+      ) }
+    )> }
+  ) }
 );
 
 export type ModifyMovieMutationVariables = Exact<{
@@ -437,6 +484,36 @@ export function useCreateMovieMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateMovieMutationHookResult = ReturnType<typeof useCreateMovieMutation>;
 export type CreateMovieMutationResult = Apollo.MutationResult<CreateMovieMutation>;
 export type CreateMovieMutationOptions = Apollo.BaseMutationOptions<CreateMovieMutation, CreateMovieMutationVariables>;
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($id: String!) {
+  deleteComment(id: $id)
+}
+    `;
+export type DeleteCommentMutationFn = Apollo.MutationFunction<DeleteCommentMutation, DeleteCommentMutationVariables>;
+
+/**
+ * __useDeleteCommentMutation__
+ *
+ * To run a mutation, you first call `useDeleteCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCommentMutation, { data, loading, error }] = useDeleteCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCommentMutation, DeleteCommentMutationVariables>) {
+        return Apollo.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument, baseOptions);
+      }
+export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
+export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
+export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
 export const DeleteMovieDocument = gql`
     mutation DeleteMovie($id: String!) {
   deleteMovie(id: $id)
@@ -538,6 +615,49 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const ModifyCommentDocument = gql`
+    mutation ModifyComment($id: String!, $content: String!) {
+  modifyComment(id: $id, content: $content) {
+    errors {
+      field
+      message
+    }
+    comment {
+      id
+      content
+      user {
+        email
+      }
+    }
+  }
+}
+    `;
+export type ModifyCommentMutationFn = Apollo.MutationFunction<ModifyCommentMutation, ModifyCommentMutationVariables>;
+
+/**
+ * __useModifyCommentMutation__
+ *
+ * To run a mutation, you first call `useModifyCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useModifyCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [modifyCommentMutation, { data, loading, error }] = useModifyCommentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      content: // value for 'content'
+ *   },
+ * });
+ */
+export function useModifyCommentMutation(baseOptions?: Apollo.MutationHookOptions<ModifyCommentMutation, ModifyCommentMutationVariables>) {
+        return Apollo.useMutation<ModifyCommentMutation, ModifyCommentMutationVariables>(ModifyCommentDocument, baseOptions);
+      }
+export type ModifyCommentMutationHookResult = ReturnType<typeof useModifyCommentMutation>;
+export type ModifyCommentMutationResult = Apollo.MutationResult<ModifyCommentMutation>;
+export type ModifyCommentMutationOptions = Apollo.BaseMutationOptions<ModifyCommentMutation, ModifyCommentMutationVariables>;
 export const ModifyMovieDocument = gql`
     mutation ModifyMovie($id: String!, $title: String, $minutes: Int) {
   modifyMovie(id: $id, options: {title: $title, minutes: $minutes})

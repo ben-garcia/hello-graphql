@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Form,
+  Icon,
   Button,
   Comment,
   Statistic,
@@ -11,7 +12,14 @@ import {
 import { useParams } from "react-router-dom";
 
 import Card from "../components/Card";
-import { useMovieQuery, useCreateCommentMutation } from "../generated/graphql";
+import ModifyCommentForm from "../components/ModifyCommentForm";
+import {
+  useMovieQuery,
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
+} from "../generated/graphql";
+import DispatchContext from "../contexts/DispatchContext";
+import StateContext from "../contexts/StateContext";
 
 interface Params {
   id?: string;
@@ -19,8 +27,12 @@ interface Params {
 
 function Movie() {
   const [content, setContent] = useState<string>("");
-  const [comments, setComments] = useState<any>([]);
   const { id }: Params = useParams();
+  const dispatch = useContext(DispatchContext);
+  const {
+    comments,
+    user: { email },
+  } = useContext(StateContext);
 
   useEffect(() => {
     localStorage.setItem("movieId", String(id));
@@ -37,10 +49,11 @@ function Movie() {
 
   useEffect(() => {
     if (data) {
-      setComments(data.movie?.comments as any);
+      dispatch({ type: "GET_COMMENTS", payload: data.movie?.comments } as any);
     }
   }, [data]);
   const [createComment] = useCreateCommentMutation();
+  const [deleteComment] = useDeleteCommentMutation();
 
   return (
     <Container>
@@ -95,7 +108,38 @@ function Movie() {
                           {new Date(Number(c.createdAt)).toLocaleDateString()}
                         </div>
                       </Comment.Metadata>
-                      <Comment.Text>{c.content}</Comment.Text>
+                      <Comment.Text>
+                        {c.content}
+                        <ModifyCommentForm
+                          commentId={c.id}
+                          content={c.content}
+                          trigger={
+                            <Button
+                              title="Edit Comment"
+                              className="transparent"
+                              size="mini"
+                              icon
+                            >
+                              <Icon name="edit" />
+                            </Button>
+                          }
+                        />
+                        <Button
+                          title="Delete Comment"
+                          onClick={async () => {
+                            await deleteComment({ variables: { id: c.id } });
+                            dispatch({
+                              type: "DELETE_COMMENT",
+                              payload: c.id,
+                            } as any);
+                          }}
+                          size="mini"
+                          className="transparent"
+                          icon
+                        >
+                          <Icon name="trash" />
+                        </Button>
+                      </Comment.Text>
                     </Comment.Content>
                   </Comment>
                 ))}
@@ -107,16 +151,23 @@ function Movie() {
             onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
               try {
+                if (content.trim() === "") {
+                  return;
+                }
+
                 const response = await createComment({
                   variables: { content, movieId: data?.movie?.id as string },
                 });
 
                 if (response.data?.createComment.comment) {
                   setContent("");
-                  setComments([
-                    ...comments,
-                    response.data.createComment?.comment,
-                  ]);
+                  dispatch({
+                    type: "ADD_COMMENT",
+                    payload: {
+                      ...response.data?.createComment.comment,
+                      user: { email },
+                    },
+                  } as any);
                 }
 
                 if (response.data?.createComment.errors) {
@@ -136,13 +187,7 @@ function Movie() {
               }}
               value={content}
             />
-            <Button
-              type="submit"
-              content="Add Comment"
-              labelPosition="left"
-              icon="edit"
-              primary
-            />
+            <Button type="submit" content="Add Comment" primary />
           </Form>
         </Grid.Column>
       </Grid>

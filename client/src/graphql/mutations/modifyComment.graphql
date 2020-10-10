@@ -1,0 +1,15 @@
+mutation ModifyComment($id: String!, $content: String!) {
+	modifyComment(id: $id content: $content ) {
+    errors {
+      field
+      message
+    }
+    comment {
+      id
+      content
+      user {
+        email
+      }
+    }
+  }
+}
