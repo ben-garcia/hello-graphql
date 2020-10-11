@@ -54,7 +54,7 @@ export default function commentReducer(
     case CommentActions.GET_COMMENTS:
       return [...action.payload];
     case CommentActions.ADD_COMMENT:
-      return [...state, action.payload];
+      return [action.payload, ...state];
     case CommentActions.DELETE_COMMENT:
       return state.filter((c: Comment) => c.id !== action.payload);
     case CommentActions.MODIFY_COMMENT:

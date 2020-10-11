@@ -51,7 +51,7 @@ function Movie() {
     if (data) {
       dispatch({ type: "GET_COMMENTS", payload: data.movie?.comments } as any);
     }
-  }, [data]);
+  }, [data, dispatch]);
   const [createComment] = useCreateCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
