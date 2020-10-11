@@ -125,6 +125,13 @@ class MovieResolver {
         relations: ['user', 'comments', 'comments.user'],
         where: { id },
       });
+
+      movie!.comments.sort((a, b) => {
+        const aDate = new Date(a.createdAt).getTime();
+        const bDate = new Date(b.createdAt).getTime();
+        return bDate - aDate;
+      });
+
       return movie;
     } catch (e) {
       return undefined;

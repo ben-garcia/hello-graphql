@@ -93,6 +93,7 @@ class CommentResolver {
         },
       };
     } catch (e) {
+      console.log(e);
       return {
         errors: [
           {
@@ -106,7 +107,7 @@ class CommentResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuthenticated)
-  async deleteComment(@Arg('id', () => String) id: number): Promise<boolean> {
+  async deleteComment(@Arg('id', () => String) id: string): Promise<boolean> {
     try {
       await Comment.createQueryBuilder()
         .delete()
